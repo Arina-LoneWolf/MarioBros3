@@ -14,7 +14,7 @@ TileMap::TileMap(int ID, LPCWSTR texture_file_path, LPCWSTR data_file_path, int 
 	Load();
 }
 
-int TileMap::GetWidthTileMap()
+int TileMap::GetMapWidth()
 {
 	return data_col_cell_num * TILE_WIDTH;
 }
@@ -69,15 +69,15 @@ void TileMap::Draw()
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
-	int firstcol = (int)cx / TILE_WIDTH;
-	int lastcol = firstcol + (SCREEN_WIDTH / 2.8 / TILE_WIDTH);
+	int first_col = (int)cx / TILE_WIDTH;
+	int last_col = first_col + (GAME_SCREEN_WIDTH / TILE_WIDTH);
 
 	int first_row = (int)cy / TILE_HEIGHT;
-	int last_row = first_row + (SCREEN_HEIGHT / 2.8 / TILE_HEIGHT);
+	int last_row = first_row + (GAME_SCREEN_HEIGHT / TILE_HEIGHT);
 
 	for (UINT i = first_row; i <= last_row; i++)
 	{
-		for (UINT j = firstcol; j <= lastcol; j++)
+		for (UINT j = first_col; j <= last_col; j++)
 		{
 			float x = TILE_WIDTH * j + TILE_WIDTH / 2;
 			float y = TILE_HEIGHT * i + TILE_HEIGHT / 2;

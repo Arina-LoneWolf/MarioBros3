@@ -14,8 +14,8 @@
 
 #define START_TILE_ID 1
 
-#define SCREEN_WIDTH 759
-#define SCREEN_HEIGHT 740
+#define GAME_SCREEN_WIDTH	271
+#define GAME_SCREEN_HEIGHT	264
 
 class TileMap
 {
@@ -32,7 +32,7 @@ class TileMap
 
 public:
 	TileMap(int ID, LPCWSTR texture_file_path, LPCWSTR data_file_path, int texture_row_cell_num, int texture_col_cell_num, int data_row_cell_num, int data_col_cell_num);
-	int GetWidthTileMap();
+	int GetMapWidth();
 	void LoadMapResource();
 	void Load();
 	void Draw();
