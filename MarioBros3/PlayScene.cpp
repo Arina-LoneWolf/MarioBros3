@@ -9,6 +9,8 @@
 #include "Portal.h"
 #include "Coin.h"
 #include "Platform.h"
+#include "Ground.h"
+#include "PandoraBrick.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -25,6 +27,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_UNKNOWN -1
 #define SCENE_SECTION_ASSETS	1
 #define SCENE_SECTION_OBJECTS	2
+#define SCENE_SECTION_TILEMAP 7
 
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
@@ -97,7 +100,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	// skip invalid lines - an object set must have at least id, x, y
 	if (tokens.size() < 2) return;
 
-	int object_type = atoi(tokens[0].c_str());
+	Type object_type = static_cast<Type>(atoi(tokens[0].c_str()));
 	float x = (float)atof(tokens[1].c_str());
 	float y = (float)atof(tokens[2].c_str());
 
@@ -105,22 +108,42 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
+	case Type::MARIO:
 		if (player!=NULL) 
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x,y); 
+		obj = new CMario(x, y); 
 		player = (CMario*)obj;  
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
+	case Type::YELLOW_GOOMBA: obj = new CGoomba(x, y); break;
+	case Type::COIN: obj = new CCoin(x, y); break;
 
-	case OBJECT_TYPE_PLATFORM:
+	case Type::PANDORA_BRICK:
+	{
+		float brickType = (float)atof(tokens[3].c_str());
+		float itemType = (float)atof(tokens[4].c_str());
+
+		obj = new CPandoraBrick(x, y, brickType, itemType);
+
+		break;
+	}
+
+	case Type::COLOR_BOX:
+	case Type::GROUND:
+	{
+		float row_cell_num = (float)atof(tokens[3].c_str());
+		float column_cell_num = (float)atof(tokens[4].c_str());
+
+		obj = new CGround(x, y, row_cell_num, column_cell_num);
+
+		break;
+	}
+
+	case Type::PLATFORM:
 	{
 
 		float cell_width = (float)atof(tokens[3].c_str());
@@ -139,7 +162,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
-	case OBJECT_TYPE_PORTAL:
+	case Type::PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float b = (float)atof(tokens[4].c_str());
@@ -156,9 +179,26 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	// General object setup
 	obj->SetPosition(x, y);
-
+	obj->SetType(object_type);
 
 	objects.push_back(obj);
+}
+
+void CPlayScene::_ParseSection_TILEMAP(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 7) return;
+
+	int ID = atoi(tokens[0].c_str());
+	wstring texture_file_path = ToWSTR(tokens[1]);
+	wstring data_file_path = ToWSTR(tokens[2]);
+	int texture_row_cell_num = atoi(tokens[3].c_str());
+	int texture_col_cell_num = atoi(tokens[4].c_str());
+	int data_row_cell_num = atoi(tokens[5].c_str());
+	int data_col_cell_num = atoi(tokens[6].c_str());
+
+	map = new TileMap(ID, texture_file_path.c_str(), data_file_path.c_str(), texture_row_cell_num, texture_col_cell_num, data_row_cell_num, data_col_cell_num);
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -214,6 +254,7 @@ void CPlayScene::Load()
 		if (line[0] == '#') continue;	// skip comment lines	
 		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
 		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
+		if (line == "[TILEMAP]") { section = SCENE_SECTION_TILEMAP; continue; }
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
 
 		//
@@ -223,6 +264,7 @@ void CPlayScene::Load()
 		{ 
 			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
 		}
 	}
 
@@ -260,13 +302,15 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < 0) cx = 0;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, 238.0f /*cy*/);
 
 	PurgeDeletedObjects();
 }
 
 void CPlayScene::Render()
 {
+	map->Draw();
+
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 }

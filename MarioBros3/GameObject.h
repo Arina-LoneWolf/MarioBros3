@@ -9,6 +9,8 @@
 #include "Sprites.h"
 #include "Collision.h"
 
+#include "ObjectTypes.h"
+
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
@@ -30,12 +32,16 @@ protected:
 
 	bool isDeleted; 
 
+	Type type;
+
 public: 
+	void SetType(Type type) { this->type = type; }
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
+	Type GetType() { return this->type; }
 	int GetState() { return this->state; }
 	virtual void Delete() { isDeleted = true;  }
 	bool IsDeleted() { return isDeleted; }
