@@ -1,5 +1,6 @@
 # list of object assets to load in this scene
 [ASSETS]
+data\mario-old.txt
 data\mario.txt
 data\coin.txt
 data\cloud.txt
@@ -12,7 +13,7 @@ data\bronze_brick.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	2400	10
+0	10	10
 
 # Pandora Brick
 1	184	360	1	1
@@ -62,6 +63,6 @@ data\bronze_brick.txt
 #55	200	160	216	180	1
 
 [TILEMAP]
-8888	textures/map1.png	data/map1.txt	41	2	41	176
+8888	textures/map1.png	data/map1.txt	41	2	41	177
 
 

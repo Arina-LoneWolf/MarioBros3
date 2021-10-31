@@ -191,14 +191,14 @@ void CPlayScene::_ParseSection_TILEMAP(string line)
 	if (tokens.size() < 7) return;
 
 	int ID = atoi(tokens[0].c_str());
-	wstring texture_file_path = ToWSTR(tokens[1]);
-	wstring data_file_path = ToWSTR(tokens[2]);
-	int texture_row_cell_num = atoi(tokens[3].c_str());
-	int texture_col_cell_num = atoi(tokens[4].c_str());
-	int data_row_cell_num = atoi(tokens[5].c_str());
-	int data_col_cell_num = atoi(tokens[6].c_str());
+	wstring tileset_file_path = ToWSTR(tokens[1]);
+	wstring map_file_path = ToWSTR(tokens[2]);
+	int num_of_tileset_rows = atoi(tokens[3].c_str());
+	int num_of_tileset_cols = atoi(tokens[4].c_str());
+	int num_of_map_rows = atoi(tokens[5].c_str());
+	int num_of_map_cols = atoi(tokens[6].c_str());
 
-	map = new TileMap(ID, texture_file_path.c_str(), data_file_path.c_str(), texture_row_cell_num, texture_col_cell_num, data_row_cell_num, data_col_cell_num);
+	map = new TileMap(ID, tileset_file_path.c_str(), map_file_path.c_str(), num_of_tileset_rows, num_of_tileset_cols, num_of_map_rows, num_of_map_cols);
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -301,7 +301,7 @@ void CPlayScene::Update(DWORD dt)
 	cy -= game->GetBackBufferHeight() / 2;
 
 	if (cx < 0) cx = 0;
-	if (cx >= map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
+	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
 
 	CGame::GetInstance()->SetCamPos(cx, 238.0f /*cy*/);
 
@@ -310,7 +310,7 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	map->Draw();
+	map->Render();
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
