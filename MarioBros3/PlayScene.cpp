@@ -119,7 +119,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case Type::YELLOW_GOOMBA: obj = new CGoomba(x, y); break;
+	case Type::YELLOW_GOOMBA:
+	case Type::RED_PARAGOOMBA:
+		obj = new CGoomba(x, y); break;
+
 	case Type::COIN: obj = new CCoin(x, y); break;
 
 	case Type::PANDORA_BRICK:

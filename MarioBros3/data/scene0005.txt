@@ -6,6 +6,7 @@ data\coin.txt
 data\cloud.txt
 data\pandora_brick.txt
 data\bronze_brick.txt
+data\goomba.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -14,6 +15,9 @@ data\bronze_brick.txt
 
 # MARIO
 0	10	10
+
+# Goomba
+3	230	399
 
 # Pandora Brick
 1	184	360	1	1
@@ -63,6 +67,6 @@ data\bronze_brick.txt
 #55	200	160	216	180	1
 
 [TILEMAP]
-8888	textures/map1.png	data/map1.txt	41	2	41	177
+8888	textures\map1.png	data\map1.txt	41	2	41	177
 
 
