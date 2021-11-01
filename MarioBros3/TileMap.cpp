@@ -51,8 +51,6 @@ void TileMap::Load()
 		return;
 	}
 
-	DebugOut(L"so dong", num_of_map_rows);
-	DebugOut(L"so cot", num_of_map_cols);
 	for (int i = 0; i < num_of_map_rows; i++)
 	{
 		for (int j = 0; j < num_of_map_cols; j++)

@@ -19,6 +19,11 @@
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
 
+#define GROUND_Y 160.0f
+
+
+#pragma region MARIO_STATE
+
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
 #define MARIO_STATE_WALKING_RIGHT	100
@@ -33,6 +38,7 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
+#pragma endregion
 
 #pragma region MARIO_ANIMATION_ID
 
@@ -194,8 +200,6 @@
 
 #pragma endregion
 
-#define GROUND_Y 160.0f
-
 #pragma region MARIO_LEVEL
 
 #define	MARIO_LEVEL_SMALL	1
@@ -213,13 +217,13 @@
 #define MARIO_BIG_IDLE_OFFSET_LEFT_R 3
 #define MARIO_BIG_IDLE_OFFSET_LEFT_L 4
 #define MARIO_BIG_IDLE_OFFSET_TOP	12
-#define MARIO_BIG_SITTING_OFFSET_TOP 7
+#define MARIO_BIG_SITTING_OFFSET_TOP 3
 
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 17
 
 #define MARIO_RACCOON_IDLE_OFFSET_LEFT_R 3
-#define MARIO_RACCOON_IDLE_OFFSET_LEFT_L 5
+#define MARIO_RACCOON_IDLE_OFFSET_LEFT_L 4
 #define MARIO_RACCOON_IDLE_OFFSET_TOP 13
 #define MARIO_RACCOON_BBOX_WIDTH 14
 #define MARIO_RACCOON_BBOX_HEIGHT 27
@@ -230,8 +234,6 @@
 
 #define MARIO_SMALL_BBOX_WIDTH  14
 #define MARIO_SMALL_BBOX_HEIGHT 15
-
-#define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
 #pragma endregion
 
@@ -246,10 +248,13 @@ class CMario : public CGameObject
 	float ay;				// acceleration on y 
 
 	int level; 
+
 	int untouchable; 
 	ULONGLONG untouchable_start;
-	BOOLEAN isOnPlatform;
+
 	int coin; 
+
+	BOOLEAN isOnPlatform;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -264,6 +269,7 @@ public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;
+		isOnPlatform = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
@@ -271,7 +277,6 @@ public:
 		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 		untouchable_start = -1;
-		isOnPlatform = false;
 		coin = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -289,7 +294,7 @@ public:
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	void SetLevel(int l);
+	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
