@@ -7,6 +7,8 @@ data\cloud.txt
 data\pandora_brick.txt
 data\bronze_brick.txt
 data\goomba.txt
+data\koopa.txt
+data\items.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -14,10 +16,11 @@ data\goomba.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	10	10
+0	100	10
 
 # Goomba
-3	230	399
+2	230	399
+3	944	370
 
 # Pandora Brick
 1	184	360	1	1

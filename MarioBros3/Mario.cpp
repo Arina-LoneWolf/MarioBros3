@@ -11,6 +11,14 @@
 #include "Collision.h"
 #include "Textures.h"
 
+CMario* CMario::__instance = nullptr;
+
+CMario* CMario::GetInstance()
+{
+	if (__instance == NULL) __instance = new CMario(0.0f, 0.0f);
+	return __instance;
+}
+
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
@@ -82,9 +90,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE)
+		if (goomba->GetState() != GOOMBA_STATE_DIE_BY_CRUSH)
 		{
-			goomba->SetState(GOOMBA_STATE_DIE);
+			if (goomba->GetType() == Type::RED_PARAGOOMBA && goomba->HasWings())
+				goomba->SetState(PARAGOOMBA_STATE_NORMAL);
+			else
+				goomba->SetState(GOOMBA_STATE_DIE_BY_CRUSH);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
@@ -92,7 +103,7 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (untouchable == 0)
 		{
-			if (goomba->GetState() != GOOMBA_STATE_DIE)
+			if (goomba->GetState() != GOOMBA_STATE_DIE_BY_CRUSH)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
@@ -331,7 +342,6 @@ int CMario::GetAniIdFire()
 
 	return aniId;
 }
-
 
 //
 // Get animdation ID for big Mario

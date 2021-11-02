@@ -212,28 +212,28 @@
 #pragma region MARIO_BBOX_SIZE
 
 #define MARIO_BIG_BBOX_WIDTH  14
-#define MARIO_BIG_BBOX_HEIGHT 26
+#define MARIO_BIG_BBOX_HEIGHT 27
 
 #define MARIO_BIG_IDLE_OFFSET_LEFT_R 3
 #define MARIO_BIG_IDLE_OFFSET_LEFT_L 4
-#define MARIO_BIG_IDLE_OFFSET_TOP	12
-#define MARIO_BIG_SITTING_OFFSET_TOP 3
+#define MARIO_BIG_IDLE_OFFSET_TOP	13
+#define MARIO_BIG_SITTING_OFFSET_TOP 4
 
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
-#define MARIO_BIG_SITTING_BBOX_HEIGHT 17
+#define MARIO_BIG_SITTING_BBOX_HEIGHT 18
 
 #define MARIO_RACCOON_IDLE_OFFSET_LEFT_R 3
 #define MARIO_RACCOON_IDLE_OFFSET_LEFT_L 4
-#define MARIO_RACCOON_IDLE_OFFSET_TOP 13
+#define MARIO_RACCOON_IDLE_OFFSET_TOP 14
 #define MARIO_RACCOON_BBOX_WIDTH 14
-#define MARIO_RACCOON_BBOX_HEIGHT 27
+#define MARIO_RACCOON_BBOX_HEIGHT 28
 
 #define MARIO_SMALL_IDLE_OFFSET_LEFT_R 4
 #define MARIO_SMALL_IDLE_OFFSET_LEFT_L 3
-#define MARIO_SMALL_IDLE_OFFSET_TOP 1
+#define MARIO_SMALL_IDLE_OFFSET_TOP 2
 
 #define MARIO_SMALL_BBOX_WIDTH  14
-#define MARIO_SMALL_BBOX_HEIGHT 15
+#define MARIO_SMALL_BBOX_HEIGHT 16
 
 #pragma endregion
 
@@ -242,6 +242,8 @@
 
 class CMario : public CGameObject
 {
+	static CMario* __instance;
+
 	BOOLEAN isSitting;
 	float maxVx;
 	float dax;
@@ -290,6 +292,8 @@ public:
 		return (state != MARIO_STATE_DIE); 
 	}
 
+	float GetPosX() { return this->x; }
+
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 
 	void OnNoCollision(DWORD dt);
@@ -301,4 +305,6 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	static CMario* GetInstance();
 };

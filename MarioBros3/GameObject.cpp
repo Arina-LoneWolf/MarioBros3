@@ -27,7 +27,7 @@ void CGameObject::RenderBoundingBox()
 
 	GetBoundingBox(l, t, r, b);
 	rect.left = 1;
-	rect.top = 0;
+	rect.top = 1;
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 

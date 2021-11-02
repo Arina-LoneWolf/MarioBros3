@@ -1,20 +1,34 @@
-#include "Goomba.h"
-#include "Textures.h"
+﻿#include "Goomba.h"
+#include "Mario.h"
+
+#define GAME_SCREEN_WIDTH 320
 
 CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 {
+	lowFlyingCounter = 0;
+	lostWings = false;
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
-	die_start = -1;
-	SetState(GOOMBA_STATE_WALKING);
+}
+
+float CGoomba::GetSpeedX()
+{
+	if (CMario::GetInstance()->GetPosX() > this->x)
+		return GOOMBA_WALKING_SPEED;
+	else
+		return -GOOMBA_WALKING_SPEED;
 }
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (state == GOOMBA_STATE_DIE)
+	if (state == GOOMBA_STATE_DIE_BY_CRUSH)
 	{
+		if (type == Type::YELLOW_GOOMBA)
+			top = y - GOOMBA_DIE_OFFSET_TOP;
+		else
+			top = y + GOOMBA_DIE_OFFSET_TOP;
+
 		left = x - GOOMBA_DIE_OFFSET_LEFT;
-		top = y - GOOMBA_DIE_OFFSET_TOP;
 		right = left + GOOMBA_BBOX_WIDTH;
 		bottom = top + GOOMBA_DIE_BBOX_HEIGHT;
 	}
@@ -48,6 +62,14 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 )
 	{
 		vy = 0;
+		if (lostWings) return;
+
+		if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter < 3)
+			SetState(PARAGOOMBA_STATE_FLY_LOW);
+		else if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter == 3)
+			SetState(PARAGOOMBA_STATE_FLY_HIGH);
+		else if (state == PARAGOOMBA_STATE_FLY_HIGH)
+			SetState(GOOMBA_STATE_WALKING);
 	}
 	else if (e->nx != 0)
 	{
@@ -57,13 +79,41 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (state == PARAGOOMBA_STATE_FLY_HIGH)
+		ay = PARAGOOMBA_HIGH_FLYING_GRAVITY;
+	else
+		ay = GOOMBA_GRAVITY;
+
 	vy += ay * dt;
 	vx += ax * dt;
 
-	if ( (state == GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > GOOMBA_DIE_TIMEOUT) )
+	if (state == GOOMBA_STATE_DIE_BY_CRUSH && dieTime->IsTimeUp())
 	{
 		isDeleted = true;
 		return;
+	}
+
+	if (state == -1)
+	{
+		if (type == Type::RED_PARAGOOMBA && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x)
+		{
+			SetState(GOOMBA_STATE_WALKING);
+			chasingTime->Start();
+		}
+		else
+			SetState(GOOMBA_STATE_WALKING);
+	}
+
+	if (type == Type::RED_PARAGOOMBA && state == GOOMBA_STATE_WALKING && redirectionDelay->IsTimeUp() && !lostWings && !chasingTime->IsTimeUp())
+	{
+		vx = GetSpeedX();
+		redirectionDelay->Stop();
+	}
+
+	if (walkTime->IsTimeUp() && !lostWings)
+	{
+		SetState(PARAGOOMBA_STATE_FLY_LOW);
+		walkTime->Stop();
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -74,22 +124,24 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CGoomba::Render()
 {
 	int aniId = ID_ANI_GOOMBA_WALKING;
-
+	// chưa có die by attack
 	if (type == Type::RED_PARAGOOMBA)
 	{
-		if (state == GOOMBA_STATE_DIE)
-		{
+		if (state == GOOMBA_STATE_DIE_BY_CRUSH)
 			aniId = ID_ANI_PARAGOOMBA_DIE_BY_CRUSH;
-		}
+		else if (state == PARAGOOMBA_STATE_FLY_LOW)
+			aniId = ID_ANI_PARAGOOMBA_FLAP_WINGS_SLOWLY;
+		else if (state == PARAGOOMBA_STATE_FLY_HIGH)
+			aniId = ID_ANI_PARAGOOMBA_FLAP_WINGS_QUICKLY;
+		else if (state == PARAGOOMBA_STATE_NORMAL)
+			aniId = ID_ANI_PARAGOOMBA_NORMAL_WALKING;
 		else
 			aniId = ID_ANI_PARAGOOMBA_WINGS_WALKING;
 	}
 	else
 	{
-		if (state == GOOMBA_STATE_DIE)
-		{
+		if (state == GOOMBA_STATE_DIE_BY_CRUSH)
 			aniId = ID_ANI_GOOMBA_DIE_BY_CRUSH;
-		}
 		else
 			aniId = ID_ANI_GOOMBA_WALKING;
 	}
@@ -103,15 +155,40 @@ void CGoomba::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-		case GOOMBA_STATE_DIE:
-			die_start = GetTickCount64();
-			y += GOOMBA_DIE_OFFSET_Y;
-			vx = 0;
-			vy = 0;
-			ay = 0; 
-			break;
-		case GOOMBA_STATE_WALKING: 
+	case GOOMBA_STATE_DIE_BY_CRUSH:
+		dieTime->Start();
+		vx = 0;
+		vy = 0;
+		ay = 0; 
+		break;
+
+	case GOOMBA_STATE_WALKING: 
+		if (type == Type::RED_PARAGOOMBA)
+		{
+			if (!chasingTime->IsTimeUp())
+				vx = GetSpeedX();
+			if (!lostWings)
+			{
+				walkTime->Start();
+				redirectionDelay->Start();
+			}
+		}
+		else
 			vx = -GOOMBA_WALKING_SPEED;
-			break;
+		break;
+
+	case PARAGOOMBA_STATE_NORMAL:
+		lostWings = true;
+		break;
+
+	case PARAGOOMBA_STATE_FLY_LOW:
+		vy = -PARAGOOMBA_LOW_FLYING_SPEED_Y;
+		lowFlyingCounter++;
+		break;
+
+	case PARAGOOMBA_STATE_FLY_HIGH:
+		lowFlyingCounter = 0;
+		vy = -PARAGOOMBA_HIGH_FLYING_SPEED_Y;
+		break;
 	}
 }
