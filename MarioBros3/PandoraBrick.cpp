@@ -1,4 +1,6 @@
 #include "PandoraBrick.h"
+#include "Mario.h"
+#include "Mushroom.h"
 
 void CPandoraBrick::Render()
 {
@@ -14,13 +16,16 @@ void CPandoraBrick::Render()
 			animations->Get(ID_ANI_BRONZE_BRICK)->Render(x, y);
 	}
 
-	RenderBoundingBox();
+	for (int i = 0; i < items.size(); i++)
+	{
+		items[i]->Render();
+	}
+
+	//RenderBoundingBox();
 }
 
-void CPandoraBrick::Update(DWORD dt)
+void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt);
-
 	y += vy * dt;
 
 	if (state == PANDORA_BRICK_STATE_ACTIVE && y <= highestPos)
@@ -33,7 +38,32 @@ void CPandoraBrick::Update(DWORD dt)
 		vy = 0;
 		y = initialY;
 		isReadyToDropItem = true;
+
+		//CMario* player = CMario::GetInstance();
+
+		switch (itemType)
+		{
+		case ITEM_TYPE_RANDOM:
+			if (CMario::GetInstance()->GetLevel() == MARIO_LEVEL_SMALL)
+			{
+				CMushroom* mushroom = new CMushroom(x, y);
+				items.push_back(mushroom);
+			}
+			break;
+		default:
+			break;
+		}
 	}
+
+	for (int i = 0; i < items.size(); i++)
+	{
+		items[i]->Update(dt, coObjects);
+
+		if (items[i]->IsDeleted())
+			items.erase(items.begin() + i);
+	}
+
+	CGameObject::Update(dt, coObjects);
 }
 
 void CPandoraBrick::GetBoundingBox(float& l, float& t, float& r, float& b)

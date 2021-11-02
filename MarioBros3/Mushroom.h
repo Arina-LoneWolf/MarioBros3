@@ -18,7 +18,7 @@ protected:
 	float ax;
 	float ay;
 
-	ULONGLONG die_start;
+	float highestPos;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -31,7 +31,12 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public:
-	CMushroom(float x, float y);
+	CMushroom(float x, float y) : CGameObject(x, y) {
+		ax = 0;
+		ay = 0;
+		vy = -0.03f;
+		highestPos = y - MUSHROOM_BBOX_HEIGHT;
+	}
 	virtual void SetState(int state);
 };
 

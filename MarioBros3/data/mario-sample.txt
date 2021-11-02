@@ -18,3 +18,4 @@ height	240
 1	textures\mario-old.png
 10	textures\enemies.png
 20	textures\misc.png
+21	textures\misc-2.png

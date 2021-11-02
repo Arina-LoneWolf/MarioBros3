@@ -262,6 +262,7 @@ class CMario : public CGameObject
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
+	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -292,6 +293,7 @@ public:
 		return (state != MARIO_STATE_DIE); 
 	}
 
+	int GetLevel() { return this->level; }
 	float GetPosX() { return this->x; }
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }

@@ -1,7 +1,7 @@
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 #=============SUPER MUSHROOM==============
-1	156	121	172	137	20
+1	156	119	172	137	20
 
 #==============1-UP MUSHROOM==============
 2	286	121	302	137	20

@@ -6,6 +6,7 @@
 
 #include "Goomba.h"
 #include "Coin.h"
+#include "PandoraBrick.h"
 #include "Portal.h"
 
 #include "Collision.h"
@@ -61,6 +62,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CCoin*>(e->obj))
 		OnCollisionWithCoin(e);
+	else if (dynamic_cast<CPandoraBrick*>(e->obj))
+		OnCollisionWithPandoraBrick(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 }
@@ -130,6 +133,12 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
+}
+
+void CMario::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
+{
+	if (e->ny > 0)
+		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
 }
 
 //
@@ -403,7 +412,7 @@ int CMario::GetAniIdBig()
 					aniId = ID_ANI_MARIO_STOP_LEFT;
 				else if (ax == MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
+				else/* if (ax == MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_WALKING_RIGHT;
 			}
 			else // vx < 0
@@ -412,7 +421,7 @@ int CMario::GetAniIdBig()
 					aniId = ID_ANI_MARIO_STOP_RIGHT;
 				else if (ax == -MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
+				else/* if (ax == -MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
 			}
 
@@ -496,7 +505,7 @@ void CMario::SetState(int state)
 			isSitting = true;
 			vx = 0; vy = 0.0f;
 		}*/
-		if (isOnPlatform && level != MARIO_LEVEL_SMALL)
+		if (isOnPlatform && level != MARIO_LEVEL_SMALL && state != MARIO_STATE_WALKING_RIGHT)
 		{
 			isSitting = true;
 			DecelerateSlightly();

@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Ground.h"
 #include "PandoraBrick.h"
+#include "Pipe.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -134,6 +135,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float itemType = (float)atof(tokens[4].c_str());
 
 		obj = new CPandoraBrick(x, y, brickType, itemType);
+
+		break;
+	}
+
+	case Type::PIPE:
+	{
+		float pipeType = (float)atof(tokens[3].c_str());
+		obj = new CPipe(x, y, pipeType);
 
 		break;
 	}

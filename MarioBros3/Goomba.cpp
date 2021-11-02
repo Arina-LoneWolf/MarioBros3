@@ -62,7 +62,8 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 )
 	{
 		vy = 0;
-		if (lostWings) return;
+
+		if (lostWings || type == Type::YELLOW_GOOMBA) return;
 
 		if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter < 3)
 			SetState(PARAGOOMBA_STATE_FLY_LOW);
@@ -100,7 +101,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			SetState(GOOMBA_STATE_WALKING);
 			chasingTime->Start();
 		}
-		else
+		else if (type == Type::YELLOW_GOOMBA)
 			SetState(GOOMBA_STATE_WALKING);
 	}
 
