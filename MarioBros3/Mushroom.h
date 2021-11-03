@@ -15,7 +15,6 @@
 class CMushroom : public CGameObject
 {
 protected:
-	float ax;
 	float ay;
 
 	float highestPos;
@@ -32,7 +31,6 @@ protected:
 
 public:
 	CMushroom(float x, float y) : CGameObject(x, y) {
-		ax = 0;
 		ay = 0;
 		vy = -0.03f;
 		highestPos = y - MUSHROOM_BBOX_HEIGHT;

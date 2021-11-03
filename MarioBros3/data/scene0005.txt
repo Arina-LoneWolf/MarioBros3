@@ -17,11 +17,15 @@ data\pipe.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	100	10
+0	500	50
+#0	100	50
 
 # Goomba
-2	230	399
+#2	230	399
 3	944	370
+
+# Koopa
+19	599	368
 
 # Pandora Brick
 1	184	360	1	1

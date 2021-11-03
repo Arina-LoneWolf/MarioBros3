@@ -12,15 +12,16 @@ void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bot
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
+	
 
 	if (y < highestPos)
 	{
 		y = highestPos;
-		ay = 0.0004f;
-		//vx = -0.035f;
-		vx = -0.07f;
+		ay = 0.001f;
+		//ay = 0.15f;
+		vx = -0.035f;
+		//vx = -0.07f;
+		//vx = -0.07f;
 	}
 
 	float ml, mt, mr, mb, pl, pt, pr, pb;
@@ -32,8 +33,9 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 	}
 
-	CGameObject::Update(dt, coObjects);
+	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+	vy += ay * dt;
 }
 
 void CMushroom::Render()
@@ -52,8 +54,14 @@ void CMushroom::OnNoCollision(DWORD dt)
 
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->nx != 0)
+	if (e->ny != 0 && e->obj->IsBlocking())
 	{
+		
+		if (e->ny < 0) vy = 0;
+	}
+	else if (e->nx != 0 && e->obj->IsBlocking())
+	{
+		DebugOut(L"CHAM DOI CHIEU NAM\n");
 		vx = -vx;
 	}
 }

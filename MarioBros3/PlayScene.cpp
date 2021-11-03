@@ -12,6 +12,7 @@
 #include "Ground.h"
 #include "PandoraBrick.h"
 #include "Pipe.h"
+#include "Koopa.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -126,6 +127,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::YELLOW_GOOMBA:
 	case Type::RED_PARAGOOMBA:
 		obj = new CGoomba(x, y); break;
+
+	case Type::RED_KOOPA:
+	case Type::GREEN_KOOPA:
+	case Type::GREEN_PARAKOOPA:
+		obj = new CKoopa(x, y); break;
 
 	case Type::COIN: obj = new CCoin(x, y); break;
 

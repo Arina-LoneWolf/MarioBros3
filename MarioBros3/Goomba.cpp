@@ -156,6 +156,11 @@ void CGoomba::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case GOOMBA_STATE_DIE_BY_ATTACK:
+		vx = vx * nx;
+		vy = -0.28f;
+		break;
+
 	case GOOMBA_STATE_DIE_BY_CRUSH:
 		dieTime->Start();
 		vx = 0;

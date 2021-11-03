@@ -1,10 +1,16 @@
 #pragma once
 #include "GameObject.h"
+#include "Koopa.h"
 
 class CDetectionBox : public CGameObject
 {
-	CDetectionBox() {}
+public:
+	CKoopa* koopa;
+	//int koopa_nx;
+
+	CDetectionBox(CKoopa* koopa) { this->koopa = koopa; }
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 };
 

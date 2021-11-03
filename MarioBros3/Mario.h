@@ -5,6 +5,7 @@
 #include "Animations.h"
 
 #include "debug.h"
+#include "Timer.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -255,11 +256,14 @@ class CMario : public CGameObject
 	int untouchable; 
 	ULONGLONG untouchable_start;
 
+	CTimer* kickShell = new CTimer(200);
+
 	int coin; 
 
 	BOOLEAN isOnPlatform;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
