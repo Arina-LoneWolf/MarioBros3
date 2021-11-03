@@ -29,7 +29,7 @@
 [ANIMATIONS]
 # ====== NORMAL GOOMBA ======
 # move
-702	30001	400	30002	400
+702	30001	100	30002	100
 # die by crush
 703	30003	100
 # die by attack

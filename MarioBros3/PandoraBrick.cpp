@@ -4,6 +4,11 @@
 
 void CPandoraBrick::Render()
 {
+	for (int i = 0; i < items.size(); i++)
+	{
+		items[i]->Render();
+	}
+
 	CAnimations* animations = CAnimations::GetInstance();
 	
 	if (state == PANDORA_BRICK_STATE_ACTIVE)
@@ -16,11 +21,6 @@ void CPandoraBrick::Render()
 			animations->Get(ID_ANI_BRONZE_BRICK)->Render(x, y);
 	}
 
-	for (int i = 0; i < items.size(); i++)
-	{
-		items[i]->Render();
-	}
-
 	//RenderBoundingBox();
 }
 
@@ -28,18 +28,17 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	y += vy * dt;
 
-	if (state == PANDORA_BRICK_STATE_ACTIVE && y <= highestPos)
+	if (state == PANDORA_BRICK_STATE_ACTIVE && y < highestPos && !isBouncedUp)
 	{
 		vy = -vy;
+		isBouncedUp = true;
 	}
 
-	if (vy > 0 && y >= initialY)
+	if (vy > 0 && y > initialY)
 	{
 		vy = 0;
 		y = initialY;
-		isReadyToDropItem = true;
-
-		//CMario* player = CMario::GetInstance();
+		//isReadyToDropItem = true;
 
 		switch (itemType)
 		{

@@ -19,7 +19,17 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		y = highestPos;
 		ay = 0.0004f;
-		vx = -0.035f;
+		//vx = -0.035f;
+		vx = -0.07f;
+	}
+
+	float ml, mt, mr, mb, pl, pt, pr, pb;
+	GetBoundingBox(ml, mt, mr, mb);
+	CMario::GetInstance()->GetBoundingBox(pl, pt, pr, pb);
+	if (CGameObject::CheckAABB(ml, mt, mr, mb, pl, pt, pr, pb))
+	{
+		CMario::GetInstance()->SetLevel(MARIO_LEVEL_BIG);
+		isDeleted = true;
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -42,8 +52,10 @@ void CMushroom::OnNoCollision(DWORD dt)
 
 void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->obj->GetType() != Type::PANDORA_BRICK)
-		DebugOut(L"object type va cham nam: %d\n", e->obj->GetType());
+	if (e->nx != 0)
+	{
+		vx = -vx;
+	}
 }
 
 void CMushroom::SetState(int state)

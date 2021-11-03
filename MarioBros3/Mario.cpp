@@ -137,7 +137,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
 {
-	if (e->ny > 0)
+	if (e->ny > 0 && e->obj->GetState() != PANDORA_BRICK_STATE_ACTIVE)
 		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
 }
 
@@ -184,7 +184,7 @@ int CMario::GetAniIdSmall()
 					aniId = ID_ANI_MARIO_SMALL_STOP_LEFT;
 				else if (ax == MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
+				else/* if (ax == MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
 			}
 			else // vx < 0
@@ -193,7 +193,7 @@ int CMario::GetAniIdSmall()
 					aniId = ID_ANI_MARIO_SMALL_STOP_RIGHT;
 				else if (ax == -MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
+				else/* if (ax == -MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
 			}
 
@@ -259,7 +259,7 @@ int CMario::GetAniIdRaccoon()
 					aniId = ID_ANI_MARIO_RACCOON_STOP_LEFT;
 				else if (ax == MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
+				else/* if (ax == MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
 			}
 			else // vx < 0
@@ -268,7 +268,7 @@ int CMario::GetAniIdRaccoon()
 					aniId = ID_ANI_MARIO_RACCOON_STOP_RIGHT;
 				else if (ax == -MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
+				else/* if (ax == -MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
 			}
 
@@ -334,7 +334,7 @@ int CMario::GetAniIdFire()
 					aniId = ID_ANI_MARIO_FIRE_STOP_LEFT;
 				else if (ax == MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_FIRE_RUNNING_RIGHT;
-				else if (ax == MARIO_ACCEL_WALK_X)
+				else/* if (ax == MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_FIRE_WALKING_RIGHT;
 			}
 			else // vx < 0
@@ -343,7 +343,7 @@ int CMario::GetAniIdFire()
 					aniId = ID_ANI_MARIO_FIRE_STOP_RIGHT;
 				else if (ax == -MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_FIRE_RUNNING_LEFT;
-				else if (ax == -MARIO_ACCEL_WALK_X)
+				else/* if (ax == -MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_FIRE_WALKING_LEFT;
 			}
 

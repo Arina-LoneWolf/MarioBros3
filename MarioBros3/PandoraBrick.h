@@ -29,7 +29,9 @@ public:
 	int initialY;
 	float highestPos;
 
-	bool isReadyToDropItem = false;
+	bool isBouncedUp;
+
+	//bool isReadyToDropItem = false;
 
 	vector<LPGAMEOBJECT> items;
 
@@ -37,6 +39,7 @@ public:
 	{
 		this->brickType = brickType;
 		this->itemType = itemType;
+		isBouncedUp = false;
 		initialY = y;
 		highestPos = initialY - PANDORA_BRICK_BOUNCE_DISTANCE;
 	}
