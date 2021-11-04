@@ -6,7 +6,6 @@ class CDetectionBox : public CGameObject
 {
 public:
 	CKoopa* koopa;
-	//int koopa_nx;
 
 	CDetectionBox(CKoopa* koopa) { this->koopa = koopa; }
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

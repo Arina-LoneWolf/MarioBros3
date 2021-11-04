@@ -21,6 +21,8 @@ float CGoomba::GetSpeedX()
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+	if (state == GOOMBA_STATE_DIE_BY_ATTACK) return;
+
 	if (state == GOOMBA_STATE_DIE_BY_CRUSH)
 	{
 		if (type == Type::YELLOW_GOOMBA)
@@ -56,14 +58,14 @@ void CGoomba::OnNoCollision(DWORD dt)
 
 void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return; 
-	if (dynamic_cast<CGoomba*>(e->obj)) return; 
+	/*if (!e->obj->IsBlocking()) return; 
+	if (dynamic_cast<CGoomba*>(e->obj)) return; */
 
 	if (e->ny != 0 )
 	{
 		vy = 0;
 
-		if (lostWings || type == Type::YELLOW_GOOMBA) return;
+		if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
 
 		if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter < 3)
 			SetState(PARAGOOMBA_STATE_FLY_LOW);
@@ -74,7 +76,9 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0)
 	{
-		vx = -vx;
+		vx = -vx;	
+		if (!e->obj->IsBlocking())
+			e->obj->ChangeDirection();
 	}
 }
 
@@ -94,9 +98,9 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 
-	if (state == -1)
+	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x)
 	{
-		if (type == Type::RED_PARAGOOMBA && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x)
+		if (type == Type::RED_PARAGOOMBA/* && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x*/)
 		{
 			SetState(GOOMBA_STATE_WALKING);
 			chasingTime->Start();
@@ -111,7 +115,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		redirectionDelay->Stop();
 	}
 
-	if (walkTime->IsTimeUp() && !lostWings)
+	if (walkTime->IsTimeUp() && !lostWings && state != GOOMBA_STATE_DIE_BY_ATTACK)
 	{
 		SetState(PARAGOOMBA_STATE_FLY_LOW);
 		walkTime->Stop();
@@ -130,6 +134,8 @@ void CGoomba::Render()
 	{
 		if (state == GOOMBA_STATE_DIE_BY_CRUSH)
 			aniId = ID_ANI_PARAGOOMBA_DIE_BY_CRUSH;
+		else if (state == GOOMBA_STATE_DIE_BY_ATTACK)
+			aniId = ID_ANI_PARAGOOMBA_DIE_BY_ATTACK;
 		else if (state == PARAGOOMBA_STATE_FLY_LOW)
 			aniId = ID_ANI_PARAGOOMBA_FLAP_WINGS_SLOWLY;
 		else if (state == PARAGOOMBA_STATE_FLY_HIGH)
@@ -143,6 +149,8 @@ void CGoomba::Render()
 	{
 		if (state == GOOMBA_STATE_DIE_BY_CRUSH)
 			aniId = ID_ANI_GOOMBA_DIE_BY_CRUSH;
+		else if (state == GOOMBA_STATE_DIE_BY_ATTACK)
+			aniId = ID_ANI_GOOMBA_DIE_BY_ATTACK;
 		else
 			aniId = ID_ANI_GOOMBA_WALKING;
 	}
@@ -158,7 +166,7 @@ void CGoomba::SetState(int state)
 	{
 	case GOOMBA_STATE_DIE_BY_ATTACK:
 		vx = vx * nx;
-		vy = -0.28f;
+		vy = -0.22f;
 		break;
 
 	case GOOMBA_STATE_DIE_BY_CRUSH:

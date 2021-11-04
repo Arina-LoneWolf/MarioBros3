@@ -1,6 +1,5 @@
 # list of object assets to load in this scene
 [ASSETS]
-data\mario-old.txt
 data\mario.txt
 data\coin.txt
 data\cloud.txt
@@ -22,6 +21,10 @@ data\pipe.txt
 
 # Goomba
 #2	230	399
+2	536	408
+2	840	392
+2	888	392
+#3	536	406
 3	944	370
 
 # Koopa

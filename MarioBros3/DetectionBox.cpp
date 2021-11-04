@@ -28,22 +28,15 @@ void CDetectionBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (dynamic_cast<CKoopa*>(e)) continue;
 
 		e->GetBoundingBox(bl, bt, br, bb);
-		if (CGameObject::CheckAABB(ml, mt, mr, mb, bl, bt, br, bb)/* && e->IsBlocking()*/)
+		if (CGameObject::CheckAABB(ml, mt, mr, mb, bl, bt, br, bb))
 		{
-			DebugOut(L"va cham con gi: %d\n", e->GetType());
 			noCollision = false;
 			break;
 		}
 	}
 
-	if (noCollision)
-	{
-		if (koopa->GetState() == KOOPA_STATE_WALKING)
-		{
-			DebugOut(L"doi huong\n");
-			koopa->ChangeDirection();
-		}
-	}
+	if (noCollision && koopa->GetState() == KOOPA_STATE_WALKING)
+		koopa->ChangeDirection();
 }
 
 void CDetectionBox::Render()

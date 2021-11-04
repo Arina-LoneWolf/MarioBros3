@@ -1,6 +1,7 @@
 #include "Koopa.h"
 #include "debug.h"
 #include "DetectionBox.h"
+#include "Goomba.h"
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -66,16 +67,30 @@ void CKoopa::OnNoCollision(DWORD dt)
 
 void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) return;
+	//if (!e->obj->IsBlocking()) return;
 
 	if (e->ny != 0)
 	{
 		vy = 0;
 	}
-	else if (e->nx != 0) 
+	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
 		vx = -vx;
 		nx = -nx;
+	}
+
+	if (dynamic_cast<CGoomba*>(e->obj))
+		OnCollisionWithGoomba(e);
+}
+
+void CKoopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+{
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+	if (e->nx != 0)
+	{
+		goomba->SetNx(nx);
+		goomba->SetState(GOOMBA_STATE_DIE_BY_ATTACK);
 	}
 }
 
@@ -111,6 +126,9 @@ void CKoopa::SetState(int state)
 
 void CKoopa::ChangeDirection()
 {
-	vx = -vx;
-	nx = -nx;
+	if (state == KOOPA_STATE_WALKING)
+	{
+		vx = -vx;
+		nx = -nx;
+	}
 }
