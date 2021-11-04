@@ -7,21 +7,18 @@ void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bot
 	left = x - MUSHROOM_BBOX_WIDTH / 2;
 	top = y - MUSHROOM_BBOX_HEIGHT / 2;
 	right = left + MUSHROOM_BBOX_WIDTH;
-	bottom = top + 16;
+	bottom = top + MUSHROOM_BBOX_HEIGHT;
 }
 
 void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
+	vy += ay * dt;
 
 	if (y < highestPos)
 	{
 		y = highestPos;
-		ay = 0.001f;
-		//ay = 0.15f;
-		vx = -0.035f;
-		//vx = -0.07f;
-		//vx = -0.07f;
+		ay = MUSHROOM_GRAVITY;
+		vx = -MUSHROOM_MOVING_SPEED;
 	}
 
 	float ml, mt, mr, mb, pl, pt, pr, pb;
@@ -33,9 +30,7 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 	}
 
-	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
-	vy += ay * dt;
 }
 
 void CMushroom::Render()
@@ -43,7 +38,7 @@ void CMushroom::Render()
 	CAnimations* animations = CAnimations::GetInstance();
 	animations->Get(ID_ANI_SUPER_MUSHROOM)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMushroom::OnNoCollision(DWORD dt)
@@ -61,7 +56,6 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
-		DebugOut(L"CHAM DOI CHIEU NAM\n");
 		vx = -vx;
 	}
 }

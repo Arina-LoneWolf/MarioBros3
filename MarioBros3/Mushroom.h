@@ -1,8 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define MUSHROOM_GRAVITY 0.002f
-#define MUSHROOM_MOVING_SPEED 0.035f
+#define MUSHROOM_GRAVITY 0.001f
+#define MUSHROOM_MOVING_SPEED 0.05f
 
 #define MUSHROOM_STATE_MOVING 100
 

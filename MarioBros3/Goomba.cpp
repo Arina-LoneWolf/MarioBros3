@@ -121,7 +121,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		walkTime->Stop();
 	}
 
-	CGameObject::Update(dt, coObjects);
+	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -156,7 +156,8 @@ void CGoomba::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
-	RenderBoundingBox();
+
+	//RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
@@ -166,7 +167,7 @@ void CGoomba::SetState(int state)
 	{
 	case GOOMBA_STATE_DIE_BY_ATTACK:
 		vx = vx * nx;
-		vy = -0.22f;
+		vy = -GOOMBA_DIE_DEFLECT_SPEED_Y;
 		break;
 
 	case GOOMBA_STATE_DIE_BY_CRUSH:

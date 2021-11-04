@@ -7,13 +7,13 @@ void CDetectionBox::GetBoundingBox(float& left, float& top, float& right, float&
 	koopa->GetPosition(x, y);
 
 	if (koopa->GetNx() > 0)
-		left = x + 2;
+		left = x + DETECTION_BOX_OFFSET_LEFT_R;
 	else
-		left = x - 4;
+		left = x - DETECTION_BOX_OFFSET_LEFT_L;
 
-	top = y - 8;
-	right = left + 2;
-	bottom = top + 28;
+	top = y - DETECTION_BOX_OFFSET_TOP;
+	right = left + DETECTION_BOX_BBOX_WIDTH;
+	bottom = top + DETECTION_BOX_BBOX_HEIGHT;
 }
 
 void CDetectionBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -41,5 +41,5 @@ void CDetectionBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CDetectionBox::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }

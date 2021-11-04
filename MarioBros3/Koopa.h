@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
 
-#define KOOPA_GRAVITY 0.002f
+#define KOOPA_GRAVITY 0.0006f
 #define KOOPA_WALKING_SPEED 0.035f
+#define KOOPA_SHELL_MOVING_SPEED 0.16f
 
 #define KOOPA_DIE_TIMEOUT 300
 
@@ -56,6 +57,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
 
 public:
 	CKoopa(float x, float y);

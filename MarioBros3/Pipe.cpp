@@ -17,7 +17,8 @@ void CPipe::Render()
 		aniId = ID_ANI_PIPE_48_STRIPE;
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+
+	//RenderBoundingBox();
 }
 
 void CPipe::GetBoundingBox(float& l, float& t, float& r, float& b)

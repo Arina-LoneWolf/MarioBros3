@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "DetectionBox.h"
 #include "Goomba.h"
+#include "PandoraBrick.h"
 
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -30,7 +31,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		subItems[i]->Update(dt, coObjects);
 	}
 
-	CGameObject::Update(dt, coObjects);
+	//CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
@@ -51,7 +52,8 @@ void CKoopa::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+
+	//RenderBoundingBox();
 
 	for (int i = 0; i < subItems.size(); i++)
 	{
@@ -79,25 +81,33 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		nx = -nx;
 	}
 
+	if (state != KOOPA_STATE_SHELL_MOVING) return;
+
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
+	else if (dynamic_cast<CPandoraBrick*>(e->obj))
+		OnCollisionWithPandoraBrick(e);
 }
 
 void CKoopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
-	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
 	if (e->nx != 0)
 	{
-		goomba->SetNx(nx);
-		goomba->SetState(GOOMBA_STATE_DIE_BY_ATTACK);
+		e->obj->SetNx(nx);
+		e->obj->SetState(GOOMBA_STATE_DIE_BY_ATTACK);
 	}
+}
+
+void CKoopa::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
+{
+	if (e->nx != 0 && e->obj->GetState() != PANDORA_BRICK_STATE_ACTIVE)
+		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
 }
 
 CKoopa::CKoopa(float x, float y)
 {
 	ax = 0.0f;
-	ay = 0.0006f;
+	ay = KOOPA_GRAVITY;
 	SetState(KOOPA_STATE_WALKING);
 	CDetectionBox* detectionBox = new CDetectionBox(this);
 	subItems.push_back(detectionBox);
@@ -110,7 +120,7 @@ void CKoopa::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_WALKING:
-		vx = -0.035f;
+		vx = -KOOPA_WALKING_SPEED;
 		nx = -1;
 		break;
 
@@ -119,7 +129,7 @@ void CKoopa::SetState(int state)
 		break;
 
 	case KOOPA_STATE_SHELL_MOVING:
-		vx = 0.16f * nx;
+		vx = KOOPA_SHELL_MOVING_SPEED * nx;
 		break;
 	}
 }
