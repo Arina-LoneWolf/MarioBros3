@@ -51,15 +51,10 @@ void CMushroom::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
-		
 		if (e->ny < 0) vy = 0;
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
 		vx = -vx;
 	}
-}
-
-void CMushroom::SetState(int state)
-{
 }

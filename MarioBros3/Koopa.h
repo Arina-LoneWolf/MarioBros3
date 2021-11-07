@@ -60,7 +60,7 @@ protected:
 	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
 
 public:
-	CKoopa(float x, float y);
+	CKoopa(float x, float y, Type type);
 	virtual void SetState(int state);
 
 	virtual void ChangeDirection();

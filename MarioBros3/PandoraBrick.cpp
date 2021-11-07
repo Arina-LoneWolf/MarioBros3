@@ -38,14 +38,13 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		vy = 0;
 		y = initialY;
-		//isReadyToDropItem = true;
 
 		switch (itemType)
 		{
 		case ITEM_TYPE_RANDOM:
 			if (CMario::GetInstance()->GetLevel() == MARIO_LEVEL_SMALL)
 			{
-				CMushroom* mushroom = new CMushroom(x, y);
+				CMushroom* mushroom = new CMushroom(x, y, Type::SUPER_MUSHROOM);
 				items.push_back(mushroom);
 			}
 			break;

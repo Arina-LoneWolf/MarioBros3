@@ -67,15 +67,15 @@ void TileMap::Render()
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
-	int first_col = (int)cx / TILE_CELL_WIDTH;
-	int last_col = first_col + (GAME_SCREEN_WIDTH / TILE_CELL_WIDTH);
+	int left = (int)cx / TILE_CELL_WIDTH;
+	int right = left + (GAME_SCREEN_WIDTH / TILE_CELL_WIDTH);
 
-	int first_row = (int)cy / TILE_CELL_HEIGHT;
-	int last_row = first_row + (GAME_SCREEN_HEIGHT / TILE_CELL_HEIGHT);
+	int top = (int)cy / TILE_CELL_HEIGHT;
+	int bottom = top + (GAME_SCREEN_HEIGHT / TILE_CELL_HEIGHT);
 
-	for (UINT i = first_row; i <= last_row; i++)
+	for (UINT i = top; i <= bottom; i++)
 	{
-		for (UINT j = first_col; j <= last_col; j++)
+		for (UINT j = left; j <= right; j++)
 		{
 			float x = TILE_CELL_WIDTH * j + TILE_CELL_WIDTH / 2;
 			float y = TILE_CELL_HEIGHT * i + TILE_CELL_HEIGHT / 2;

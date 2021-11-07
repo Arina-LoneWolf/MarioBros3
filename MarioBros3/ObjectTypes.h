@@ -40,4 +40,5 @@ enum class Type
 	SMB3_LOGO = 43,
 	
 	PLATFORM = 80,
+	UNSET = -1,
 };

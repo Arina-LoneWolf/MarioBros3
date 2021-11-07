@@ -3,7 +3,7 @@
 
 #define GAME_SCREEN_WIDTH 320
 
-CGoomba::CGoomba(float x, float y):CGameObject(x, y)
+CGoomba::CGoomba(float x, float y, Type type) : CGameObject(x, y, type)
 {
 	lowFlyingCounter = 0;
 	lostWings = false;
@@ -65,7 +65,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vy = 0;
 
-		if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
+		//if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
 
 		if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter < 3)
 			SetState(PARAGOOMBA_STATE_FLY_LOW);
@@ -98,15 +98,12 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		return;
 	}
 
-	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x)
+	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH > x)
 	{
-		if (type == Type::RED_PARAGOOMBA/* && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH >= this->x*/)
-		{
-			SetState(GOOMBA_STATE_WALKING);
+		SetState(GOOMBA_STATE_WALKING);
+
+		if (type == Type::RED_PARAGOOMBA)
 			chasingTime->Start();
-		}
-		else if (type == Type::YELLOW_GOOMBA)
-			SetState(GOOMBA_STATE_WALKING);
 	}
 
 	if (type == Type::RED_PARAGOOMBA && state == GOOMBA_STATE_WALKING && redirectionDelay->IsTimeUp() && !lostWings && !chasingTime->IsTimeUp())
@@ -115,7 +112,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		redirectionDelay->Stop();
 	}
 
-	if (walkTime->IsTimeUp() && !lostWings && state != GOOMBA_STATE_DIE_BY_ATTACK)
+	if (walkTime->IsTimeUp())
 	{
 		SetState(PARAGOOMBA_STATE_FLY_LOW);
 		walkTime->Stop();
@@ -129,7 +126,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CGoomba::Render()
 {
 	int aniId = ID_ANI_GOOMBA_WALKING;
-	// chưa có die by attack
+
 	if (type == Type::RED_PARAGOOMBA)
 	{
 		if (state == GOOMBA_STATE_DIE_BY_CRUSH)
@@ -166,6 +163,7 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE_BY_ATTACK:
+		walkTime->Stop();
 		vx = vx * nx;
 		vy = -GOOMBA_DIE_DEFLECT_SPEED_Y;
 		break;
@@ -194,6 +192,7 @@ void CGoomba::SetState(int state)
 
 	case PARAGOOMBA_STATE_NORMAL:
 		lostWings = true;
+		walkTime->Stop();
 		break;
 
 	case PARAGOOMBA_STATE_FLY_LOW:

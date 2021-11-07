@@ -3,6 +3,7 @@
 
 #define MUSHROOM_GRAVITY 0.001f
 #define MUSHROOM_MOVING_SPEED 0.05f
+#define MUSHROOM_BOUNCE_SPEED 0.03f
 
 #define MUSHROOM_STATE_MOVING 100
 
@@ -30,11 +31,10 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public:
-	CMushroom(float x, float y) : CGameObject(x, y) {
+	CMushroom(float x, float y, Type type) : CGameObject(x, y, type) {
 		ay = 0;
-		vy = -0.03f;
+		vy = -MUSHROOM_BOUNCE_SPEED;
 		highestPos = y - MUSHROOM_BBOX_HEIGHT;
 	}
-	virtual void SetState(int state);
 };
 

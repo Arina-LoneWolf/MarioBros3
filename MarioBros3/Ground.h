@@ -9,7 +9,7 @@ class CGround : public CGameObject {
 public:
 	int width, height;
 
-	CGround(float x, float y, int row_cell_num, int column_cell_num) : CGameObject(x, y) {
+	CGround(float x, float y, Type type, int row_cell_num, int column_cell_num) : CGameObject(x, y, type) {
 		width = row_cell_num * CELL_WIDTH;
 		height = column_cell_num * CELL_HEIGHT;
 	}

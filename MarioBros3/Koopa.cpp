@@ -104,7 +104,7 @@ void CKoopa::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
 		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
 }
 
-CKoopa::CKoopa(float x, float y)
+CKoopa::CKoopa(float x, float y, Type type) : CGameObject(x, y, type)
 {
 	ax = 0.0f;
 	ay = KOOPA_GRAVITY;

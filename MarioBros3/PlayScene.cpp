@@ -13,6 +13,7 @@
 #include "PandoraBrick.h"
 #include "Pipe.h"
 #include "Koopa.h"
+#include "Goomba.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -36,6 +37,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define ASSETS_SECTION_ANIMATIONS 2
 
 #define MAX_SCENE_LINE 1024
+
+#define CAM_START_Y	238.0f
 
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
@@ -126,21 +129,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case Type::YELLOW_GOOMBA:
 	case Type::RED_PARAGOOMBA:
-		obj = new CGoomba(x, y); break;
+		obj = new CGoomba(x, y, object_type); break;
 
 	case Type::RED_KOOPA:
 	case Type::GREEN_KOOPA:
 	case Type::GREEN_PARAKOOPA:
-		obj = new CKoopa(x, y); break;
+		obj = new CKoopa(x, y, object_type); break;
 
-	case Type::COIN: obj = new CCoin(x, y); break;
+	//case Type::COIN: obj = new CCoin(x, y); break;
 
 	case Type::PANDORA_BRICK:
 	{
 		float brickType = (float)atof(tokens[3].c_str());
 		float itemType = (float)atof(tokens[4].c_str());
 
-		obj = new CPandoraBrick(x, y, brickType, itemType);
+		obj = new CPandoraBrick(x, y, object_type, brickType, itemType);
 
 		break;
 	}
@@ -148,7 +151,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::PIPE:
 	{
 		float pipeType = (float)atof(tokens[3].c_str());
-		obj = new CPipe(x, y, pipeType);
+		obj = new CPipe(x, y, object_type, pipeType);
 
 		break;
 	}
@@ -159,12 +162,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float row_cell_num = (float)atof(tokens[3].c_str());
 		float column_cell_num = (float)atof(tokens[4].c_str());
 
-		obj = new CGround(x, y, row_cell_num, column_cell_num);
+		obj = new CGround(x, y, object_type, row_cell_num, column_cell_num);
 
 		break;
 	}
 
-	case Type::PLATFORM:
+	/*case Type::PLATFORM:
 	{
 
 		float cell_width = (float)atof(tokens[3].c_str());
@@ -181,7 +184,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		);
 
 		break;
-	}
+	}*/
 
 	case Type::PORTAL:
 	{
@@ -199,8 +202,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	obj->SetPosition(x, y);
-	obj->SetType(object_type);
+	//obj->SetType(object_type);
 
 	objects.push_back(obj);
 }
@@ -324,7 +326,7 @@ void CPlayScene::Update(DWORD dt)
 	if (cx < 0) cx = 0;
 	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
 
-	CGame::GetInstance()->SetCamPos(cx, 238.0f /*cy*/);
+	CGame::GetInstance()->SetCamPos(cx, CAM_START_Y /*cy*/);
 
 	PurgeDeletedObjects();
 }

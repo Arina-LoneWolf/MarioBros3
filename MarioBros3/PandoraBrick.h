@@ -35,7 +35,7 @@ public:
 
 	vector<LPGAMEOBJECT> items;
 
-	CPandoraBrick(float x, float y, int brickType, int itemType) : CGameObject(x, y)
+	CPandoraBrick(float x, float y, Type type, int brickType, int itemType) : CGameObject(x, y, type)
 	{
 		this->brickType = brickType;
 		this->itemType = itemType;

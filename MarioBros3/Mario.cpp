@@ -17,7 +17,7 @@ CMario* CMario::__instance = nullptr;
 
 CMario* CMario::GetInstance()
 {
-	if (__instance == NULL) __instance = new CMario(0.0f, 0.0f);
+	if (__instance == NULL) __instance = new CMario(0.0f, 0.0f, Type::MARIO);
 	return __instance;
 }
 

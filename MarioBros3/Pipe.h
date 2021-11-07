@@ -25,7 +25,7 @@ class CPipe : public CGameObject
 	int pipeType;
 
 public:
-	CPipe(float x, float y, int pipeType) : CGameObject(x, y)
+	CPipe(float x, float y, Type type, int pipeType) : CGameObject(x, y, type)
 	{
 		this->pipeType = pipeType;
 	}

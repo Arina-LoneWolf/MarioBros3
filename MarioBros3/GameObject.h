@@ -49,13 +49,13 @@ public:
 	bool IsDeleted() { return isDeleted; }
 	bool CheckAABB(float l_a, float t_a, float r_a, float b_a, float l_b, float t_b, float r_b, float b_b)
 	{
-		return (l_a < r_b&& r_a > l_b && t_a < b_b&& b_a > t_b);
+		return (l_a < r_b && r_a > l_b && t_a < b_b && b_a > t_b);
 	}
 
 	void RenderBoundingBox();
 
 	CGameObject();
-	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }
+	CGameObject(float x, float y, Type type) : CGameObject() { this->x = x; this->y = y; this->type = type; }
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL) {};

@@ -274,7 +274,7 @@ class CMario : public CGameObject
 	int GetAniIdFire();
 
 public:
-	CMario(float x, float y) : CGameObject(x, y)
+	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
 		isSitting = false;
 		isOnPlatform = false;
