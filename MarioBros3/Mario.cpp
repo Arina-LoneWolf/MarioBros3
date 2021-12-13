@@ -668,9 +668,9 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	else if (level == MARIO_LEVEL_SMALL)
 	{
 		if (nx > 0)
-			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT_R;
+			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT;
 		else
-			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT_L;
+			left = x - MARIO_SMALL_IDLE_OFFSET_LEFT;
 		top = y - MARIO_SMALL_IDLE_OFFSET_TOP;
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
