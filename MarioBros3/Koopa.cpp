@@ -83,7 +83,7 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0)
 	{
 		if (e->ny < 0 && type == Type::GREEN_PARAKOOPA)
-			vy = -0.22f;
+			vy = -PARAKOOPA_DEFLECT_SPEED_Y;
 		else
 			vy = 0;
 	}
@@ -158,10 +158,6 @@ void CKoopa::SetState(int state)
 	case KOOPA_STATE_VIBRATE:
 		shellTime->Stop();
 		vibrationTime->Start();
-		break;
-
-	case PARAKOOPA_STATE_NORMAL:
-		SetType(Type::GREEN_KOOPA);
 		break;
 	}
 }
