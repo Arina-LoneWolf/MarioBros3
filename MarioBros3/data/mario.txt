@@ -50,7 +50,7 @@
 10033	45	360	73	390	0
 
 # die 
-10099	365	195	391	225	0
+10099	363	195	391	225	0
 
 #===============SMALL MARIO==============
 # idle right
@@ -277,9 +277,9 @@
 # idle right
 140	10040	100
 # walk right
-141	10040	650	10041	650
+141	10040	65	10041	65
 # run fast right
-142	10043	250	10044	250
+142	10043	25	10044	25
 # jump right 
 143	10045	100
 # stop right
@@ -289,7 +289,7 @@
 # idle hold shell right
 146	10048	100
 # walk hold shell right
-147	10048	650	10049	650
+147	10048	65	10049	65
 # on air hold shell right
 148	10049	100
 # fly right
@@ -298,9 +298,9 @@
 # idle left
 160	10060	100
 # walk left
-161	10060	650	10061	650
+161	10060	65	10061	65
 # run fast left
-162	10063	250	10064	250
+162	10063	25	10064	25
 # jump left
 163	10065	100
 # stop left
@@ -310,7 +310,7 @@
 # idle hold shell left
 166	10068	100
 # walk hold shell left
-167	10068	650	10069	650
+167	10068	65	10069	65
 # on air hold shell left
 168	10069	100
 # fly left
