@@ -6,7 +6,6 @@
 
 #include "Goomba.h"
 #include "Koopa.h"
-#include "Coin.h"
 #include "PandoraBrick.h"
 #include "Portal.h"
 
@@ -43,6 +42,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	isOnPlatform = false;
 
+	tail->Update(dt, coObjects);
+
 	dax = MARIO_DECEL_X * dt;
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -70,7 +71,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CKoopa*>(e->obj))
 		OnCollisionWithKoopa(e);
-	else if (dynamic_cast<CCoin*>(e->obj))
+	else if (e->obj->GetType() == Type::COIN)
 		OnCollisionWithCoin(e);
 	else if (dynamic_cast<CPandoraBrick*>(e->obj))
 		OnCollisionWithPandoraBrick(e);
@@ -118,7 +119,12 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		{
 			if (goomba->GetState() != GOOMBA_STATE_DIE_BY_CRUSH)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level > MARIO_LEVEL_BIG)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -172,7 +178,12 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		{
 			if (koopa->GetState() != KOOPA_STATE_SHELL)
 			{
-				if (level > MARIO_LEVEL_SMALL)
+				if (level > MARIO_LEVEL_BIG)
+				{
+					level = MARIO_LEVEL_BIG;
+					StartUntouchable();
+				}
+				else if (level > MARIO_LEVEL_SMALL)
 				{
 					level = MARIO_LEVEL_SMALL;
 					StartUntouchable();
@@ -537,6 +548,8 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
+	tail->Render();
+
 	/*RenderBoundingBox();*/
 	
 	DebugOutTitle(L"Coins: %d", coin);
@@ -621,7 +634,10 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_ATTACK:
 		if (spinTail->IsStopped())
+		{
 			spinTail->Start();
+			tail->Attack();
+		}
 		break;
 	}
 

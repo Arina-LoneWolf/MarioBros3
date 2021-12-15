@@ -6,6 +6,7 @@
 
 #include "debug.h"
 #include "Timer.h"
+#include "Tail.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
@@ -254,6 +255,11 @@ class CMario : public CGameObject
 {
 	static CMario* __instance;
 
+	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
+	CTimer* spinTail = new CTimer(MARIO_SPIN_TAIL_TIME);
+
+	CTail* tail = new CTail(spinTail);
+
 	BOOLEAN isSitting;
 	BOOLEAN isOnPowerMode;
 	float maxVx;
@@ -265,9 +271,6 @@ class CMario : public CGameObject
 
 	int untouchable; 
 	ULONGLONG untouchable_start;
-
-	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
-	CTimer* spinTail = new CTimer(MARIO_SPIN_TAIL_TIME);
 
 	int coin; 
 
@@ -310,7 +313,6 @@ public:
 	}
 
 	int GetLevel() { return this->level; }
-	float GetPosX() { return this->x; }
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 

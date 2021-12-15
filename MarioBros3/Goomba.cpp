@@ -63,9 +63,10 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (e->ny != 0 )
 	{
-		vy = 0;
+		if (state != GOOMBA_STATE_DIE_BY_ATTACK)
+			vy = 0;
 
-		//if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
+		if (state == GOOMBA_STATE_DIE_BY_ATTACK || lostWings || type == Type::YELLOW_GOOMBA) return;
 
 		if (state == PARAGOOMBA_STATE_FLY_LOW && lowFlyingCounter < 3)
 			SetState(PARAGOOMBA_STATE_FLY_LOW);
@@ -152,7 +153,7 @@ void CGoomba::Render()
 			aniId = ID_ANI_GOOMBA_WALKING;
 	}
 
-	CAnimations::GetInstance()->Get(aniId)->Render(x,y);
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 
 	//RenderBoundingBox();
 }
@@ -163,9 +164,11 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE_BY_ATTACK:
+		DebugOut(L"DIE ATTACK\n");
 		walkTime->Stop();
-		vx = vx * nx;
+		vx = abs(vx) * nx;
 		vy = -GOOMBA_DIE_DEFLECT_SPEED_Y;
+		DebugOut(L"DIE ATTACK VY: %f\n", vy);
 		break;
 
 	case GOOMBA_STATE_DIE_BY_CRUSH:

@@ -146,7 +146,6 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
-    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="DetectionBox.cpp" />
@@ -155,10 +154,12 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Koopa.cpp" />
+    <ClCompile Include="MagicCoinBrick.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PandoraBrick.cpp" />
+    <ClCompile Include="BrokenPiece.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayScene.cpp" />
@@ -177,7 +178,6 @@
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
-    <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="DetectionBox.h" />
@@ -187,10 +187,12 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopa.h" />
+    <ClInclude Include="MagicCoinBrick.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="ObjectTypes.h" />
     <ClInclude Include="PandoraBrick.h" />
+    <ClInclude Include="BrokenPiece.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayScene.h" />

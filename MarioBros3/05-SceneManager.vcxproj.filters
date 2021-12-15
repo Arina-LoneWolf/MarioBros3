@@ -27,9 +27,6 @@
     <ClCompile Include="Animations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,6 +96,12 @@
     <ClCompile Include="Tail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MagicCoinBrick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BrokenPiece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -111,9 +114,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AssetIDs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Coin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">
@@ -195,6 +195,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tail.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MagicCoinBrick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BrokenPiece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
