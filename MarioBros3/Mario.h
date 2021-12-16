@@ -20,6 +20,7 @@
 #define MARIO_JUMP_RUN_SPEED_Y	0.39f
 
 #define MARIO_GRAVITY			0.0008f
+#define MARIO_WAG_TAIL_GRAVITY	0.000035f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.2f
 
@@ -250,6 +251,7 @@
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_KICK_SHELL_TIME 200
 #define MARIO_SPIN_TAIL_TIME 250
+#define MARIO_WAG_TAIL_TIME 450
 
 class CMario : public CGameObject
 {
@@ -257,11 +259,13 @@ class CMario : public CGameObject
 
 	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
 	CTimer* spinTail = new CTimer(MARIO_SPIN_TAIL_TIME);
+	CTimer* wagTail = new CTimer(MARIO_WAG_TAIL_TIME);
+	CTimer* powerMode = new CTimer(6000);
 
 	CTail* tail = new CTail(spinTail);
 
 	BOOLEAN isSitting;
-	BOOLEAN isOnPowerMode;
+	//BOOLEAN isRunning;
 	float maxVx;
 	float dax;
 	float ax;				// acceleration on x 
@@ -291,7 +295,6 @@ public:
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
 		isSitting = false;
-		isOnPowerMode = false;
 		isOnPlatform = false;
 		maxVx = 0.0f;
 		dax = 0.0f;
@@ -316,6 +319,8 @@ public:
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 
+	BOOLEAN IsOnPowerMode() { return !(powerMode->IsTimeUp() || powerMode->IsStopped()); }
+
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
@@ -325,6 +330,8 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	float GetSpeedX() { return this->vx; }
 
 	static CMario* GetInstance();
 };

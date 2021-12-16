@@ -7,19 +7,12 @@
 
 void CTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	/*float x, y;
-	CMario::GetInstance()->GetPosition(x, y);
-
-	if (CMario::GetInstance()->GetNx() > 0)
-		left = x - 4;
-	else
-		left = x + 4;*/
-
 	if (!attackIsOn) return;
+
 	left = x;
 	top = y;
-	right = left + 10;
-	bottom = top + 6;
+	right = left + TAIL_BBOX_WIDTH;
+	bottom = top + TAIL_BBOX_HEIGHT;
 }
 
 void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -35,9 +28,9 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (attackTime->GetElapsedTime() >= 200)
 	{
 		if (CMario::GetInstance()->GetNx() > 0)
-			SetPosition(px - 9, py + 5);
+			SetPosition(px - TAIL_OFFSET_X_LEFT, py + TAIL_OFFSET_Y);
 		else
-			SetPosition(px + 11, py + 5);
+			SetPosition(px + TAIL_OFFSET_X_RIGHT, py + TAIL_OFFSET_Y);
 
 		attackIsOn = true;
 	}
@@ -48,9 +41,9 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (attackTime->GetElapsedTime() >= 100)
 	{
 		if (CMario::GetInstance()->GetNx() > 0)
-			SetPosition(px + 11, py + 5);
+			SetPosition(px + TAIL_OFFSET_X_RIGHT, py + TAIL_OFFSET_Y);
 		else
-			SetPosition(px - 9, py + 5);
+			SetPosition(px - TAIL_OFFSET_X_LEFT, py + TAIL_OFFSET_Y);
 
 		attackIsOn = true;
 	}
@@ -90,9 +83,9 @@ void CTail::Attack()
 	float px, py;
 	CMario::GetInstance()->GetPosition(px, py);
 	if (CMario::GetInstance()->GetNx() > 0)
-		SetPosition(px - 9, py + 5);
+		SetPosition(px - TAIL_OFFSET_X_LEFT, py + TAIL_OFFSET_Y);
 	else
-		SetPosition(px + 11, py + 5);
+		SetPosition(px + TAIL_OFFSET_X_RIGHT, py + TAIL_OFFSET_Y);
 
 	attackIsOn = true;
 }

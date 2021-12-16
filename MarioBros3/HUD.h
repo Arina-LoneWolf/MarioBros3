@@ -1,0 +1,35 @@
+#pragma once
+
+#define ID_SPRITE_HUD_BAR	1009
+#define ID_SPRITE_BLACK_BG	11111
+
+#define ID_ANI_POWER_METER_TIER_0	920
+#define ID_ANI_POWER_METER_TIER_1	921
+#define ID_ANI_POWER_METER_TIER_2	922
+#define ID_ANI_POWER_METER_TIER_3	923
+#define ID_ANI_POWER_METER_TIER_4	924
+#define ID_ANI_POWER_METER_TIER_5	925
+#define ID_ANI_POWER_METER_TIER_6	926
+#define ID_ANI_POWER_METER_TIER_7	927
+
+#define SPEED_X_TIER_1	0.125f
+#define SPEED_X_TIER_2	0.140f
+#define SPEED_X_TIER_3	0.155f
+#define SPEED_X_TIER_4	0.170f
+#define SPEED_X_TIER_5	0.190f
+#define SPEED_X_TIER_6	0.220f
+#define SPEED_X_TIER_7	0.250f
+
+#define HUD_POS_X			126
+#define HUD_POS_Y			55
+#define BLACK_BG_POS_Y		1
+#define	POWER_METER_POS_X	32
+#define	POWER_METER_POS_Y	3
+
+class CHUD
+{
+public:
+	CHUD() {}
+	void Render();
+};
+

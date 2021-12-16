@@ -1,17 +1,16 @@
 #include "BrokenPiece.h"
 #include "debug.h"
 
-CBrokenPiece::CBrokenPiece(float x, float y, int nx, int deflectFactorY)
+CBrokenPiece::CBrokenPiece(float x, float y, int nx, int altitude)
 {
 	this->x = x;
 	this->y = y;
 	vx = BROKEN_PIECE_SPEED_X * nx;
-	vy = -BROKEN_PIECE_DEFLECT_SPEED_Y * deflectFactorY;
+	vy = -BROKEN_PIECE_DEFLECT_SPEED_Y * altitude;
 }
 
 void CBrokenPiece::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	DebugOut(L"PIECE UPDATE\n");
 	vy += BROKEN_PIECE_GRAVITY * dt;
 
 	x += vx * dt;

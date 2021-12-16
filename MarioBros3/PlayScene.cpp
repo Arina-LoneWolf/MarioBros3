@@ -140,8 +140,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case Type::PANDORA_BRICK:
 	{
-		float brickType = (float)atof(tokens[3].c_str());
-		float itemType = (float)atof(tokens[4].c_str());
+		int brickType = (float)atof(tokens[3].c_str());
+		int itemType = (float)atof(tokens[4].c_str());
 
 		obj = new CPandoraBrick(x, y, object_type, brickType, itemType);
 
@@ -150,7 +150,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case Type::PIPE:
 	{
-		float pipeType = (float)atof(tokens[3].c_str());
+		int pipeType = (float)atof(tokens[3].c_str());
 		obj = new CPipe(x, y, object_type, pipeType);
 
 		break;
@@ -159,8 +159,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::COLOR_BOX:
 	case Type::GROUND:
 	{
-		float row_cell_num = (float)atof(tokens[3].c_str());
-		float column_cell_num = (float)atof(tokens[4].c_str());
+		int row_cell_num = (float)atof(tokens[3].c_str());
+		int column_cell_num = (float)atof(tokens[4].c_str());
 
 		obj = new CGround(x, y, object_type, row_cell_num, column_cell_num);
 
@@ -319,7 +319,7 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
+	//cy -= game->GetBackBufferHeight() / 2;
 
 	if (cx < 0) cx = 0;
 	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
@@ -335,6 +335,8 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+
+	HUD->Render();
 }
 
 /*

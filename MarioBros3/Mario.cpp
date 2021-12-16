@@ -22,6 +22,13 @@ CMario* CMario::GetInstance()
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (!powerMode->IsTimeUp() && !powerMode->IsStopped() && !isOnPlatform)
+		ay = 0.0003f;
+	else if (!wagTail->IsStopped() && !wagTail->IsTimeUp())
+		ay = 0.000035f;
+	else
+		ay = MARIO_GRAVITY;
+
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -39,6 +46,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (spinTail->IsTimeUp())
 		spinTail->Stop();
+
+	if (wagTail->IsTimeUp())
+		wagTail->Stop();
+
+	if (powerMode->IsTimeUp())
+		powerMode->Stop();
 
 	isOnPlatform = false;
 
@@ -60,7 +73,11 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny < 0)
+		{
+			wagTail->Stop();
+			isOnPlatform = true;
+		}
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
@@ -82,6 +99,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 void CMario::DecelerateSlightly()
 {
 	ax = 0.0f;
+	//dax = 0.00035f;
 
 	if (vx > 0)
 	{
@@ -287,32 +305,46 @@ int CMario::GetAniIdRaccoon()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X) // COI SỬA LẠI CÁI NÀY
+		if (abs(vx) == 0.25f) // COI SỬA LẠI CÁI NÀY
 		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT;
+			if (nx > 0)
+				aniId = ID_ANI_MARIO_RACCOON_FLYING_UP_RIGHT;
 			else
-				aniId = ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT;
+				aniId = ID_ANI_MARIO_RACCOON_FLYING_UP_LEFT;
 		}
 		else
 		{
 			if (isSitting)
 			{
-				if (nx >= 0)
+				if (nx > 0)
 					aniId = ID_ANI_MARIO_RACCOON_SIT_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_SIT_LEFT;
 			}
+			else if (!(powerMode->IsTimeUp() || powerMode->IsStopped()))
+			{
+				if (nx > 0)
+					aniId = ID_ANI_MARIO_RACCOON_FLY_WAG_TAIL_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_RACCOON_FLY_WAG_TAIL_LEFT;
+			}
+			else if (!(wagTail->IsTimeUp() || wagTail->IsStopped()))
+			{
+				if (nx > 0)
+					aniId = ID_ANI_MARIO_RACCOON_JUMP_WAG_TAIL_RIGHT;
+				else
+					aniId = ID_ANI_MARIO_RACCOON_JUMP_WAG_TAIL_LEFT;
+			}
 			else if (vy > 0)
 			{
-				if (nx >= 0)
+				if (nx > 0)
 					aniId = ID_ANI_MARIO_RACCOON_FALLING_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_FALLING_LEFT;
 			}
 			else // vy < 0
 			{
-				if (nx >= 0)
+				if (nx > 0)
 					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_JUMP_WALK_LEFT;
@@ -347,7 +379,7 @@ int CMario::GetAniIdRaccoon()
 			{
 				if (ax < 0)
 					aniId = ID_ANI_MARIO_RACCOON_STOP_LEFT;
-				else if (ax == MARIO_ACCEL_RUN_X)
+				else if (vx == 0.25f)
 					aniId = ID_ANI_MARIO_RACCOON_RUNNING_RIGHT;
 				else/* if (ax == MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_RACCOON_WALKING_RIGHT;
@@ -356,7 +388,7 @@ int CMario::GetAniIdRaccoon()
 			{
 				if (ax > 0)
 					aniId = ID_ANI_MARIO_RACCOON_STOP_RIGHT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
+				else if (vx == -0.25f)
 					aniId = ID_ANI_MARIO_RACCOON_RUNNING_LEFT;
 				else/* if (ax == -MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_RACCOON_WALKING_LEFT;
@@ -455,7 +487,7 @@ int CMario::GetAniIdBig()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (abs(vx) == 0.25f) // abs(ax) == MARIO_ACCEL_RUN_X
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_JUMP_RUN_RIGHT;
@@ -510,7 +542,7 @@ int CMario::GetAniIdBig()
 			{
 				if (ax < 0)
 					aniId = ID_ANI_MARIO_STOP_LEFT;
-				else if (ax == MARIO_ACCEL_RUN_X)
+				else if (vx == 0.25f) // ax = MARIO_ACCEL_RUN_X
 					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
 				else/* if (ax == MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_WALKING_RIGHT;
@@ -519,7 +551,7 @@ int CMario::GetAniIdBig()
 			{
 				if (ax > 0)
 					aniId = ID_ANI_MARIO_STOP_RIGHT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
+				else if (vx == -0.25f)
 					aniId = ID_ANI_MARIO_RUNNING_LEFT;
 				else/* if (ax == -MARIO_ACCEL_WALK_X)*/
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
@@ -564,40 +596,64 @@ void CMario::SetState(int state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
 		if (isSitting) break;
-		maxVx = MARIO_RUNNING_SPEED;
-		ax = MARIO_ACCEL_RUN_X;
+		//isRunning = true;
+		//maxVx = MARIO_RUNNING_SPEED;
+		maxVx = 0.25f;
+		//ax = MARIO_ACCEL_RUN_X;
+		ax = 0.0002f;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
 		if (isSitting) break;
-		maxVx = -MARIO_RUNNING_SPEED;
-		ax = -MARIO_ACCEL_RUN_X;
+		//isRunning = true;
+		maxVx = -0.25f;
+		ax = -0.0002f;
 		nx = -1;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
 		if (isSitting) isSitting = false;
 		maxVx = MARIO_WALKING_SPEED;
-		ax = MARIO_ACCEL_WALK_X;
+		//ax = MARIO_ACCEL_WALK_X;
+		ax = 0.0003f;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		if (isSitting) isSitting = false;
 		maxVx = -MARIO_WALKING_SPEED;
-		ax = -MARIO_ACCEL_WALK_X;
+		ax = -0.0003f;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
 		if (isOnPlatform)
 		{
-			if (abs(this->vx) == MARIO_RUNNING_SPEED)
-				vy = -MARIO_JUMP_RUN_SPEED_Y;
+			if (abs(vx) == 0.25f)
+			{
+				if (level == MARIO_LEVEL_RACCOON)
+				{
+					powerMode->Start();
+					vy = -MARIO_JUMP_RUN_SPEED_Y;
+				}
+				else
+					vy = -MARIO_JUMP_RUN_SPEED_Y;
+			}
 			else
 				vy = -MARIO_JUMP_SPEED_Y;
+		}
+		else
+		{
+			DebugOut(L"VAO JUMP ON AIR\n");
+			if (!(powerMode->IsTimeUp() || powerMode->IsStopped()) && level == MARIO_LEVEL_RACCOON)
+			{
+				DebugOut(L"NHAY LAN NUA ON AIR\n");
+				vy = -0.2f;
+			}
+			else if (wagTail->IsStopped() && level == MARIO_LEVEL_RACCOON)
+				wagTail->Start();
 		}
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
-		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+		if (vy < 0 && wagTail->IsStopped()) vy += MARIO_JUMP_SPEED_Y / 2;
 		break;
 
 	case MARIO_STATE_SIT:

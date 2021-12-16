@@ -4,6 +4,7 @@
 #include "Goomba.h"
 #include "PandoraBrick.h"
 #include "Mario.h"
+#include "MagicCoinBrick.h"
 
 #define GAME_SCREEN_WIDTH 320
 
@@ -99,6 +100,8 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CPandoraBrick*>(e->obj))
 		OnCollisionWithPandoraBrick(e);
+	else if (dynamic_cast<CMagicCoinBrick*>(e->obj))
+		OnCollisionWithMagicCoinBrick(e);
 }
 
 void CKoopa::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -114,6 +117,12 @@ void CKoopa::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
 {
 	if (e->nx != 0 && e->obj->GetState() != PANDORA_BRICK_STATE_ACTIVE)
 		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
+}
+
+void CKoopa::OnCollisionWithMagicCoinBrick(LPCOLLISIONEVENT e)
+{
+	if (e->nx != 0 && e->obj->GetState() != MAGIC_BRICK_STATE_BREAK && state == KOOPA_STATE_SHELL_MOVING)
+		e->obj->SetState(MAGIC_BRICK_STATE_BREAK);
 }
 
 CKoopa::CKoopa(float x, float y, Type type) : CGameObject(x, y, type)

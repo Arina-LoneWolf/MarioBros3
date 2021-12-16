@@ -164,11 +164,9 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE_BY_ATTACK:
-		DebugOut(L"DIE ATTACK\n");
 		walkTime->Stop();
 		vx = abs(vx) * nx;
 		vy = -GOOMBA_DIE_DEFLECT_SPEED_Y;
-		DebugOut(L"DIE ATTACK VY: %f\n", vy);
 		break;
 
 	case GOOMBA_STATE_DIE_BY_CRUSH:

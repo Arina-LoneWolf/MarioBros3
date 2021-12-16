@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Mario.h"
 #include "TileMap.h"
+#include "HUD.h"
 
 
 class CPlayScene: public CScene
@@ -14,6 +15,7 @@ protected:
 	LPGAMEOBJECT player;		
 
 	TileMap* map;
+	CHUD* HUD;
 
 	vector<LPGAMEOBJECT> objects;
 

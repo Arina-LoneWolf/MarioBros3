@@ -9,6 +9,7 @@ data\koopa.txt
 data\items.txt
 data\pipe.txt
 data\magic_coin_brick.txt
+data\HUD.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -16,10 +17,11 @@ data\magic_coin_brick.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	500	50
+#0	500	50
 #0	100	50
 #0	1450	50
-#0	2200	50
+#0	2050	50
+0	2400	200
 
 # Goomba
 #2	230	399
