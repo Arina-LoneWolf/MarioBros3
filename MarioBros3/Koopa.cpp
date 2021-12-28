@@ -3,7 +3,7 @@
 #include "DetectionBox.h"
 #include "Goomba.h"
 #include "PandoraBrick.h"
-#include "Mario.h"
+//#include "Mario.h"
 #include "MagicCoinBrick.h"
 
 #define GAME_SCREEN_WIDTH 320
@@ -27,15 +27,23 @@ void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vy += ay * dt;
-	vx += ax * dt;
+	if (isBeingHeld)
+	{
+		vx = 0;
+		vy = 0;
+	}
+	else
+	{
+		vy += ay * dt;
+		vx += ax * dt;
+	}
 
 	if (isBeingHeld) {
 		SetPositionFollowPlayer();
 	}
 
 	if (shellTime->IsTimeUp()) {
-		SetState(KOOPA_STATE_VIBRATE);
+		//SetState(KOOPA_STATE_VIBRATE);
 	}
 
 	if (vibrationTime->IsTimeUp()) {
@@ -83,6 +91,9 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 
 	if (e->ny != 0)
 	{
+		if (e->ny < 0 && state == KOOPA_STATE_SHELL_BY_ATTACK)
+			vx = 0;
+
 		if (e->ny < 0 && type == Type::GREEN_PARAKOOPA)
 			vy = -PARAKOOPA_DEFLECT_SPEED_Y;
 		else
@@ -125,8 +136,9 @@ void CKoopa::OnCollisionWithMagicCoinBrick(LPCOLLISIONEVENT e)
 		e->obj->SetState(MAGIC_BRICK_STATE_BREAK);
 }
 
-CKoopa::CKoopa(float x, float y, Type type) : CGameObject(x, y, type)
+CKoopa::CKoopa(float x, float y, Type type, CMario* player) : CGameObject(x, y, type)
 {
+	this->player = player;
 	isBeingHeld = false;
 	isSupine = false;
 	ax = 0.0f;
@@ -142,7 +154,15 @@ void CKoopa::SetState(int state)
 
 	switch (state)
 	{
+	case KOOPA_STATE_SHELL_BY_ATTACK:
+		vx = KOOPA_SHELL_DEFLECT_X * nx;
+		vy = -KOOPA_SHELL_DEFLECT_Y;
+		shellTime->Start();
+		isSupine = true;
+		break;
+
 	case KOOPA_STATE_WALKING:
+		isSupine = false;
 		isBeingHeld = false;
 		vibrationTime->Stop();
 		vx = -KOOPA_WALKING_SPEED;
@@ -183,24 +203,24 @@ void CKoopa::ChangeDirection()
 void CKoopa::SetPositionFollowPlayer()
 {
 	float px, py; // x and y of player
-	CMario::GetInstance()->GetPosition(px, py);
+	player->GetPosition(px, py);
 
-	if (CMario::GetInstance()->GetNx() > 0) {
-		x = px + 10;
-		y = py + 3;
-	}
+	if (player->GetNx() > 0)
+		x = px + KOOPA_HELD_SHELL_POS_X_RIGHT;
 	else
-	{
-		x = px - 10;
-		y = py + 3;
-	}
+		x = px - KOOPA_HELD_SHELL_POS_X_LEFT;
+
+	if (player->GetLevel() == MARIO_LEVEL_SMALL)
+		y = py - KOOPA_HELD_SHELL_POS_Y_SMALL;
+	else
+		y = py - KOOPA_HELD_SHELL_POS_Y;
 }
 
 int CKoopa::GetAniRed()
 {
 	int aniId = ID_ANI_RED_KOOPA_WALKING_LEFT;
 
-	if (state == KOOPA_STATE_SHELL)
+	if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_SHELL_BY_ATTACK || state == KOOPA_STATE_BEING_HELD)
 	{
 		if (isSupine)
 			aniId = ID_ANI_RED_KOOPA_SHELL_SUPINE;
@@ -236,7 +256,7 @@ int CKoopa::GetAniGreen()
 {
 	int aniId = ID_ANI_GREEN_KOOPA_WALKING_LEFT;
 
-	if (state == KOOPA_STATE_SHELL)
+	if (state == KOOPA_STATE_SHELL || state == KOOPA_STATE_SHELL_BY_ATTACK)
 	{
 		if (isSupine)
 			aniId = ID_ANI_GREEN_KOOPA_SHELL_SUPINE;

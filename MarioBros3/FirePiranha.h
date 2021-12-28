@@ -1,0 +1,96 @@
+#pragma once
+#include "GameObject.h"
+#include "Timer.h"
+#include "Mario.h"
+
+#define FIRE_PIRANHA_DELAY_TIME 1500
+#define FIRE_PIRANHA_DELAY_ATTACK_TIME 700
+#define FIRE_PIRANHA_DEAD_TIME 500
+
+#define FIRE_PIRANHA_SPEED_Y 0.06f
+
+#define RED_FIRE_PIRANHA_BBOX_WIDTH		16
+#define RED_FIRE_PIRANHA_BBOX_HEIGHT	32
+#define GREEN_FIRE_PIRANHA_BBOX_WIDTH	16
+#define GREEN_FIRE_PIRANHA_BBOX_HEIGHT	24
+
+#define FIRE_PIRANHA_STATE_MOVE_UP		10
+#define FIRE_PIRANHA_STATE_MOVE_DOWN	11
+#define FIRE_PIRANHA_STATE_ATTACK		12
+
+#pragma region FIRE_PIRANHA_ANI_ID
+
+#define ID_ANI_RED_FIRE_PIRANHA_FACE_UP_LEFT		620
+#define ID_ANI_RED_FIRE_PIRANHA_FACE_DOWN_LEFT		621
+#define ID_ANI_RED_FIRE_PIRANHA_FACE_UP_RIGHT		622
+#define ID_ANI_RED_FIRE_PIRANHA_FACE_DOWN_RIGHT		623
+#define ID_ANI_RED_FIRE_PIRANHA_ATTACK_UP_LEFT		624
+#define ID_ANI_RED_FIRE_PIRANHA_ATTACK_DOWN_LEFT	625
+#define ID_ANI_RED_FIRE_PIRANHA_ATTACK_UP_RIGHT		626
+#define ID_ANI_RED_FIRE_PIRANHA_ATTACK_DOWN_RIGHT	627
+
+#define ID_ANI_GREEN_FIRE_PIRANHA_FACE_UP_LEFT		720
+#define ID_ANI_GREEN_FIRE_PIRANHA_FACE_DOWN_LEFT	721
+#define ID_ANI_GREEN_FIRE_PIRANHA_FACE_UP_RIGHT		722
+#define ID_ANI_GREEN_FIRE_PIRANHA_FACE_DOWN_RIGHT	723
+#define ID_ANI_GREEN_FIRE_PIRANHA_ATTACK_UP_LEFT	724
+#define ID_ANI_GREEN_FIRE_PIRANHA_ATTACK_DOWN_LEFT	725
+#define ID_ANI_GREEN_FIRE_PIRANHA_ATTACK_UP_RIGHT	726
+#define ID_ANI_GREEN_FIRE_PIRANHA_ATTACK_DOWN_RIGHT	727
+
+#pragma endregion
+
+#pragma region PIRANHA_POSITION
+
+//#define RED_FIRE_PIRANHA_MIN_Y				336
+#define RED_FIRE_PIRANHA_FAR_LEFT_START		191
+#define RED_FIRE_PIRANHA_NEAR_LEFT_START	296	
+#define RED_FIRE_PIRANHA_NEAR_RIGHT_START	368	
+#define RED_FIRE_PIRANHA_FAR_RIGHT_START	440	
+#define RED_FIRE_PIRANHA_FAR_RIGHT_END		535
+#define RED_FIRE_PIRANHA_SAFE_ZONE_LEFT		348
+#define RED_FIRE_PIRANHA_SAFE_ZONE_RIGHT	387
+#define RED_FIRE_PIRANHA_SAFE_ZONE_BOTTOM	415
+
+//#define GREEN_FIRE_PIRANHA_MIN_Y			344
+#define GREEN_FIRE_PIRANHA_FAR_LEFT_START	1728
+#define GREEN_FIRE_PIRANHA_NEAR_LEFT_START	1802
+#define GREEN_FIRE_PIRANHA_NEAR_RIGHT_START	1872
+#define GREEN_FIRE_PIRANHA_FAR_RIGHT_START	1956	
+#define GREEN_FIRE_PIRANHA_FAR_RIGHT_END	2012
+#define GREEN_FIRE_PIRANHA_SAFE_ZONE_LEFT	1852
+#define GREEN_FIRE_PIRANHA_SAFE_ZONE_RIGHT	1891
+#define GREEN_FIRE_PIRANHA_SAFE_ZONE_BOTTOM	415
+
+#pragma endregion
+
+
+class CFirePiranha : public CGameObject
+{
+	vector<LPGAMEOBJECT> fireballs;
+
+	CTimer* attackTime = new CTimer(FIRE_PIRANHA_DELAY_TIME);
+	CTimer* sleepTime = new CTimer(FIRE_PIRANHA_DELAY_TIME);
+	CTimer* delayToAttack = new CTimer(FIRE_PIRANHA_DELAY_ATTACK_TIME);
+	CTimer* deadTime = new CTimer(FIRE_PIRANHA_DEAD_TIME);
+
+	int last_face_ani;
+	int last_attack_ani;
+
+	CMario* player;
+
+	float topLimit;
+	float bottomLimit;
+
+public:
+	CFirePiranha(float x, float y, Type type, CMario* player);
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Render();
+	virtual void SetState(int state);
+
+	bool CheckPlayerInSafeZone(float pl, float pt, float pr, float pb);
+	Area GetPlayerArea();
+	void CreateFireball(Area playerArea);
+};
+

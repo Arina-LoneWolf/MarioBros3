@@ -7,7 +7,6 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-#include "Platform.h"
 #include "Ground.h"
 #include "PandoraBrick.h"
 #include "Pipe.h"
@@ -132,7 +131,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::RED_KOOPA:
 	case Type::GREEN_KOOPA:
 	case Type::GREEN_PARAKOOPA:
-		obj = new CKoopa(x, y, object_type); break;
+		obj = new CKoopa(x, y, object_type, (CMario*)player); break;
 
 	case Type::COIN:
 	case Type::BRONZE_BRICK:
@@ -300,9 +299,10 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		if (objects[i]->GetType() != Type::MARIO)
+			coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
@@ -333,7 +333,7 @@ void CPlayScene::Render()
 {
 	map->Render();
 
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
 
 	HUD->Render();

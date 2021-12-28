@@ -1,10 +1,13 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
+#include "Mario.h"
 
 #define KOOPA_GRAVITY 0.0006f
 #define KOOPA_WALKING_SPEED 0.035f
 #define KOOPA_SHELL_MOVING_SPEED 0.16f
+#define KOOPA_SHELL_DEFLECT_X 0.035f
+#define KOOPA_SHELL_DEFLECT_Y 0.28f
 #define PARAKOOPA_DEFLECT_SPEED_Y 0.22f
 
 #define KOOPA_DIE_TIMEOUT 300
@@ -12,18 +15,19 @@
 #define KOOPA_SHELL_TIME 8000
 #define KOOPA_VIBRATION_TIME 3000
 
-#define KOOPA_STATE_DIE 199
-
-
-#pragma region KOOPA_BBOX_SIZE
-
 #define KOOPA_BBOX_WIDTH 16
 #define KOOPA_BBOX_HEIGHT 26
 #define KOOPA_SHELL_BBOX_HEIGHT 15
-
 #define KOOPA_SHELL_OFFSET_TOP 2
+#define KOOPA_HELD_SHELL_POS_X_RIGHT 17
+#define KOOPA_HELD_SHELL_POS_X_LEFT 5
+#define KOOPA_HELD_SHELL_POS_Y 3
+#define KOOPA_HELD_SHELL_POS_Y_SMALL 1
 
-#define	KOOPA_STATE_DIE_BY_ATTACK	201
+
+#pragma region KOOPA_STATE
+
+#define	KOOPA_STATE_SHELL_BY_ATTACK	201
 #define	KOOPA_STATE_WALKING			200
 #define	KOOPA_STATE_SHELL			202
 #define	KOOPA_STATE_SHELL_MOVING	203
@@ -66,6 +70,8 @@ protected:
 	bool isBeingHeld;
 	bool isSupine;
 
+	CMario* player;
+
 	CTimer* shellTime = new CTimer(KOOPA_SHELL_TIME);
 	CTimer* vibrationTime = new CTimer(KOOPA_VIBRATION_TIME);
 
@@ -85,7 +91,7 @@ protected:
 	void OnCollisionWithMagicCoinBrick(LPCOLLISIONEVENT e);
 
 public:
-	CKoopa(float x, float y, Type type);
+	CKoopa(float x, float y, Type type, CMario* player);
 	virtual void SetState(int state);
 
 	virtual void ChangeDirection();

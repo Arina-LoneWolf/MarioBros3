@@ -36,7 +36,11 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CMushroom::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
-	animations->Get(ID_ANI_SUPER_MUSHROOM)->Render(x, y);
+
+	if (type == Type::SUPER_MUSHROOM)
+		animations->Get(ID_ANI_SUPER_MUSHROOM)->Render(x, y);
+	else
+		animations->Get(ID_ANI_1_UP_MUSHROOM)->Render(x, y);
 
 	//RenderBoundingBox();
 }

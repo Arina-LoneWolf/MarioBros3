@@ -219,6 +219,16 @@
 10236	254	1520	280	1550	0
 10237	0	761	28	791	0
 
+#=============TAIL HIT EFFECT=============
+# right pink
+1005	72	67	88	83	33
+# right white
+1006	13	299	29	315	33
+# left pink
+1007	40	299	56	315	33
+# left white
+1008	68	299	84	315	33
+
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -448,3 +458,6 @@
 332	10237	100
 # fly left
 333	10230	100
+
+# ====== TAIL HIT EFFECT ======
+902	1005	10	1006	10	1007	10	1008	10

@@ -45,6 +45,9 @@
 
 #define	MARIO_STATE_ATTACK			700
 
+#define MARIO_STATE_GO_IN_PIPE		800
+#define MARIO_STATE_GO_OUT_PIPE		801
+
 #pragma endregion
 
 #pragma region MARIO_ANIMATION_ID
@@ -265,6 +268,7 @@ class CMario : public CGameObject
 	CTail* tail = new CTail(spinTail);
 
 	BOOLEAN isSitting;
+	BOOLEAN isHoldingShell;
 	//BOOLEAN isRunning;
 	float maxVx;
 	float dax;
@@ -294,6 +298,7 @@ class CMario : public CGameObject
 public:
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
+		isHoldingShell = false;
 		isSitting = false;
 		isOnPlatform = false;
 		maxVx = 0.0f;
@@ -328,6 +333,9 @@ public:
 
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
+	int GetUntouchable() { return untouchable; }
+
+	void HitByEnemy();
 
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 

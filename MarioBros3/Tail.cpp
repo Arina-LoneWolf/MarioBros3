@@ -103,6 +103,12 @@ void CTail::OnCollisionWithGoomba(LPGAMEOBJECT e)
 
 void CTail::OnCollisionWithKoopa(LPGAMEOBJECT e)
 {
+	if (CMario::GetInstance()->GetPosX() > e->GetPosX())
+		e->SetNx(-1);
+	else
+		e->SetNx(1);
+
+	e->SetState(KOOPA_STATE_SHELL_BY_ATTACK);
 }
 
 void CTail::OnCollisionWithPandoraBrick(LPGAMEOBJECT e)
