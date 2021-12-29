@@ -1,10 +1,10 @@
 ﻿#include "Fireball.h"
-#include "Mario.h"
 
-CFireball::CFireball(float x, float y, Area playerArea)
+CFireball::CFireball(float x, float y, Area playerArea, CMario* player)
 {
 	this->x = x;
 	this->y = y;
+	this->player = player;
 	SetRoute(playerArea);
 }
 
@@ -37,11 +37,11 @@ void CFireball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	float ml, mt, mr, mb, pl, pt, pr, pb;
 	GetBoundingBox(ml, mt, mr, mb);
-	CMario::GetInstance()->GetBoundingBox(pl, pt, pr, pb);
-	if (CGameObject::CheckAABB(ml, mt, mr, mb, pl, pt, pr, pb) && !CMario::GetInstance()->GetUntouchable())
+	player->GetBoundingBox(pl, pt, pr, pb);
+	if (CGameObject::CheckAABB(ml, mt, mr, mb, pl, pt, pr, pb) && !player->GetUntouchable())
 	{
 		CreateEffect();
-		CMario::GetInstance()->HitByEnemy();
+		player->HitByEnemy();
 	}
 }
 

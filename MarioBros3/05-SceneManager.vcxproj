@@ -157,6 +157,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenPiranha.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="HiddenPortal.cpp" />
     <ClCompile Include="HitEffect.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Koopa.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GreenPiranha.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="HiddenPortal.h" />
     <ClInclude Include="HitEffect.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="KeyEventHandler.h" />

@@ -9,15 +9,16 @@
 #include "Tail.h"
 
 #define MARIO_WALKING_SPEED		0.1f
-#define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_MAX_RUNNING_SPEED	0.25f
 
-#define MARIO_ACCEL_WALK_X	0.0005f
-#define MARIO_ACCEL_RUN_X	0.0007f
+#define MARIO_ACCEL_WALK_X	0.0003f
+#define MARIO_ACCEL_RUN_X	0.0002f
 
 #define MARIO_DECEL_X	0.00025f
 
 #define MARIO_JUMP_SPEED_Y		0.34f
 #define MARIO_JUMP_RUN_SPEED_Y	0.39f
+#define MARIO_GO_PIPE_SPEED_Y	0.03f
 
 #define MARIO_GRAVITY			0.0008f
 #define MARIO_WAG_TAIL_GRAVITY	0.000035f
@@ -171,6 +172,8 @@
 #define ID_ANI_MARIO_RACCOON_SPIN_TAIL_RIGHT 205
 #define ID_ANI_MARIO_RACCOON_SPIN_TAIL_LEFT 225
 
+#define ID_ANI_MARIO_RACCOON_GO_PIPE 240
+
 // FIRE
 #define ID_ANI_MARIO_FIRE_IDLE_RIGHT 300
 #define ID_ANI_MARIO_FIRE_IDLE_LEFT 320
@@ -269,13 +272,15 @@ class CMario : public CGameObject
 
 	BOOLEAN isSitting;
 	BOOLEAN isHoldingShell;
-	//BOOLEAN isRunning;
+	BOOLEAN isInPipe;
+
 	float maxVx;
 	float dax;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
 	int level; 
+	int atHiddenPortal;
 
 	int untouchable; 
 	ULONGLONG untouchable_start;
@@ -298,8 +303,10 @@ class CMario : public CGameObject
 public:
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
+		atHiddenPortal = 0;
 		isHoldingShell = false;
 		isSitting = false;
+		isInPipe = false;
 		isOnPlatform = false;
 		maxVx = 0.0f;
 		dax = 0.0f;
@@ -328,6 +335,9 @@ public:
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
+
+	void SetCollisionWithHiddenPortal(int portalType) { this->atHiddenPortal = portalType; }
+	int GetCollisionWithHiddenPortal() { return atHiddenPortal; }
 
 	void DecelerateSlightly();
 

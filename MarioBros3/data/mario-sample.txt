@@ -16,9 +16,15 @@ height	240
 -100	textures\bbox.png
 0	textures\mario.png
 1	textures\black-background.png
+2	textures\overworld-icons-2.png
+3	textures\intro-banner.png
+4	textures\curtain.png
+5	textures\darken-the-screen.png
 10	textures\enemies.png
 20	textures\misc.png
 21	textures\misc-2.png
 33	textures\effect.png
 55	textures\status_bar.png
 56	textures\power_state.png
+50	textures\enemies_custom_2.png
+51	textures\enemies_custom.png

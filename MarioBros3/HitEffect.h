@@ -4,7 +4,7 @@
 
 #define HIT_EFFECT_TIME 150
 
-#define ID_ANI_HIT_EFFECT 902
+#define ID_ANI_HIT_EFFECT 900
 
 class CHitEffect : public CGameObject
 {

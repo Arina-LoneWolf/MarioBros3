@@ -1,0 +1,102 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#============RED FIRE PIRANHA=============
+# face up left
+42001	201	126	217	158	51
+42002	184	126	200	158	51
+# face down left
+42003	167	126	183	158	51
+42004	150	126	166	158	51
+# face up right
+42005	222	126	238	158	50
+42006	239	126	255	158	50
+# face down right
+42007	256	126	272	158	50
+42008	273	126	289	158	50
+
+#===========GREEN FIRE PIRANHA============
+# face up left
+42011	271	100	287	124	51
+42012	254	100	270	124	51
+# face down left
+42013	237	100	253	124	51
+42014	220	100	236	124	51
+# face up right
+42015	152	100	168	124	50
+42016	169	100	185	124	50
+# face down right
+42017	186	100	202	124	50
+42018	203	100	219	124	50
+
+#==============GREEN PIRANHA==============
+301	57	100	73	124	51
+302	38	100	54	124	51
+
+#================FIREBALL=================
+# right
+31	17	4	25	12	42
+32	4	19	12	27	42
+33	4	4	12	12	42
+34	18	19	26	27	43
+
+# left
+35	5	4	13	12	43
+36	18	19	26	27	43
+37	4	19	12	27	43
+38	4	4	12	12	44
+
+#===============HIT EFFECT================
+1000	80	20	96	36	33
+1001	97	20	111	34	33
+1002	126	22	140	33	33
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# ====== RED FIRE PIRANHA ======
+# face up left
+620	42001	200	42002	200
+# face down left
+621	42003	200	42004	200
+# face up right
+622	42005	200	42006	200
+# face down right
+623	42007	200	42008	200
+# attack up left
+624	42002	100
+# attack down left
+625	42004	100
+# attack up right
+626	42006	100
+# attack down right
+627	42008	100
+
+# ====== GREEN FIRE PIRANHA =====
+# face up left
+720	42011	200	42012	200
+# face down left
+721	42013	200	42014	200
+# face up right
+722	42015	200	42016	200
+# face down right
+723	42017	200	42018	200
+# attack up left
+724	42012	100
+# attack down left
+725	42014	100
+# attack up right
+726	42016	100
+# attack down right
+727	42018	100
+
+# ======= GREEN PIRANHA =======
+730	301	100	302	100
+
+# ==== FIREBALL =====
+# right
+890	31	80	32	80	33	80	34	80
+# left
+891	35	80	36	80	37	80	38	80
+
+# ======= HIT EFFECT =======
+900	1000	50	1001	50	1002	50

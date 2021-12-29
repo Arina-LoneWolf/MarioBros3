@@ -36,6 +36,7 @@ enum class Type
 	CURSOR = 41,
 	NUMBER_3 = 42,
 	SMB3_LOGO = 43,
+	HIDDEN_PORTAL = 85,
 	
 	PLATFORM = 80,
 	UNSET = -1,

@@ -6,6 +6,8 @@
 #include "Mario.h"
 #include "PlayScene.h"
 
+#include "HiddenPortal.h"
+
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -80,8 +82,19 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
-		mario->SetState(MARIO_STATE_SIT);
+		if (mario->GetCollisionWithHiddenPortal() == HIDDEN_ZONE_ENTRANCE_START)
+			mario->SetState(MARIO_STATE_GO_IN_PIPE);
+		else
+			mario->SetState(MARIO_STATE_SIT);
+	}
+	else if (game->IsKeyDown(DIK_UP))
+	{
+		if (game->IsKeyDown(DIK_S))
+			mario->SetState(MARIO_STATE_GO_OUT_PIPE);
 	}
 	else
-		mario->SetState(MARIO_STATE_IDLE);
+	{
+		if (mario->GetState() != MARIO_STATE_GO_IN_PIPE && mario->GetState() != MARIO_STATE_GO_OUT_PIPE)
+			mario->SetState(MARIO_STATE_IDLE);
+	}
 }

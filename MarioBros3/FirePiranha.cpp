@@ -1,4 +1,5 @@
-#include "FirePiranha.h"
+﻿#include "FirePiranha.h"
+#include "Fireball.h"
 
 CFirePiranha::CFirePiranha(float x, float y, Type type, CMario* player) : CGameObject(x, y, type)
 {
@@ -17,6 +18,13 @@ CFirePiranha::CFirePiranha(float x, float y, Type type, CMario* player) : CGameO
 		last_face_ani = ID_ANI_GREEN_FIRE_PIRANHA_FACE_DOWN_LEFT;
 		last_attack_ani = ID_ANI_GREEN_FIRE_PIRANHA_ATTACK_DOWN_LEFT;
 	}
+}
+
+void CFirePiranha::CreateFireball()
+{
+	Area playerArea = GetPlayerArea();
+	CFireball* fireball = new CFireball(x, y, playerArea, player); // chỉnh lại x, y
+	fireballs.push_back(fireball);
 }
 
 void CFirePiranha::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -41,8 +49,26 @@ void CFirePiranha::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	y += vy * dt;
 
-	if (deadTime->IsTimeUp())
-		isDeleted = true;
+	if (attackTime->IsStopped() && y <= topLimit)
+	{
+		y = topLimit;
+		vy = 0;
+		attackTime->Start();
+		delayToAttack->Start();
+		SetState(FIRE_PIRANHA_STATE_ATTACK);
+	}
+	else if (sleepTime->IsStopped() && y >= bottomLimit)
+	{
+		y = bottomLimit;
+		vy = 0;
+		sleepTime->Start();
+	}
+
+	if (attackTime->IsTimeUp())
+	{
+		attackTime->Stop();
+		SetState(FIRE_PIRANHA_STATE_MOVE_DOWN);
+	}
 
 	if (delayToAttack->IsTimeUp())
 	{
@@ -50,6 +76,17 @@ void CFirePiranha::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (playerArea != Area::OUTSIDE_AREA)
 			CreateFireball();
 		delayToAttack->Stop();
+	}
+
+	if (sleepTime->IsTimeUp())
+	{
+		float pl, pt, pr, pb;
+		player->GetBoundingBox(pl, pt, pr, pb);
+		if (!CheckPlayerInSafeZone(pl, pt, pr, pb))
+		{
+			sleepTime->Stop();
+			SetState(FIRE_PIRANHA_STATE_MOVE_UP);
+		}
 	}
 
 	for (size_t i = 0; i < fireballs.size(); i++)
@@ -146,10 +183,9 @@ void CFirePiranha::SetState(int state)
 		break;
 	case FIRE_PIRANHA_STATE_ATTACK: // this line is just for drawing
 		break;
-	/*case ENEMY_STATE_ATTACKED_BY_TAIL:
-		vanish = true;
-		deadTime->Start();
-		break;*/
+	case FIRE_PIRANHA_STATE_DIE:
+		isDeleted = true;
+		break;
 	}
 }
 

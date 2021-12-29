@@ -1,11 +1,9 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
-#include "Mario.h"
 
 #define FIRE_PIRANHA_DELAY_TIME 1500
 #define FIRE_PIRANHA_DELAY_ATTACK_TIME 700
-#define FIRE_PIRANHA_DEAD_TIME 500
 
 #define FIRE_PIRANHA_SPEED_Y 0.06f
 
@@ -17,6 +15,7 @@
 #define FIRE_PIRANHA_STATE_MOVE_UP		10
 #define FIRE_PIRANHA_STATE_MOVE_DOWN	11
 #define FIRE_PIRANHA_STATE_ATTACK		12
+#define FIRE_PIRANHA_STATE_DIE			19
 
 #pragma region FIRE_PIRANHA_ANI_ID
 
@@ -72,7 +71,6 @@ class CFirePiranha : public CGameObject
 	CTimer* attackTime = new CTimer(FIRE_PIRANHA_DELAY_TIME);
 	CTimer* sleepTime = new CTimer(FIRE_PIRANHA_DELAY_TIME);
 	CTimer* delayToAttack = new CTimer(FIRE_PIRANHA_DELAY_ATTACK_TIME);
-	CTimer* deadTime = new CTimer(FIRE_PIRANHA_DEAD_TIME);
 
 	int last_face_ani;
 	int last_attack_ani;
@@ -91,6 +89,6 @@ public:
 
 	bool CheckPlayerInSafeZone(float pl, float pt, float pr, float pb);
 	Area GetPlayerArea();
-	void CreateFireball(Area playerArea);
+	void CreateFireball();
 };
 

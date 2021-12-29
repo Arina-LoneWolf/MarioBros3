@@ -1,0 +1,41 @@
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#===========SUPER MARIO BROS 3============
+# normal
+101	12	76	252	189	0
+# vibrate
+102	12	74	252	189	3
+#101
+
+#============FLICKER NUMBER 3=============
+103	50	4	92	45	3
+104	96	4	138	45	3
+105	143	4	185	45	3
+106	189	4	231	45	3
+
+#=================CURSOR==================
+107	51	54	58	62	3
+
+#================CURTAIN==================
+108	0	0	256	183	4
+
+#==========TRANSITION BACKGROUND==========
+1111	0	0	256	185	5
+
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# ======= SUPER MARIO BROS 3 =======
+# normal
+21	101	100
+# vibrate
+22	102	1	101	1
+
+# ===== FLICKER NUMBER 3 =====
+23	103	70	104	70	105	70	106	70	105	70	104	70	103	70
+
+# ====== CURSOR ======
+#24	107	100
+
+# ====== CURTAIN ======
+#25	108	100
