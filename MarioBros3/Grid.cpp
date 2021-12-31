@@ -42,9 +42,9 @@ void CGrid::Update(vector<LPGAMEOBJECT> listObj)
 		listObj[i]->GetBoundingBox(l, t, r, b);
 
 		int cellTop = int(t / CELL_HEIGHT);
-		int cellBottom = ceil(b / CELL_HEIGHT);
+		int cellBottom = int(ceil(b / CELL_HEIGHT));
 		int cellLeft = int(l / CELL_WIDTH);
-		int cellRight = ceil(r / CELL_WIDTH);
+		int cellRight = int(ceil(r / CELL_WIDTH));
 
 		if (!listObj[i]->IsDeleted())
 		{
