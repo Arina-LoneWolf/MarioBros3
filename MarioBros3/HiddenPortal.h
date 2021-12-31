@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Mario.h"
 
-#define HIDDEN_PORTAL_BBOX_WIDTH 32
+#define HIDDEN_PORTAL_BBOX_WIDTH 14
 #define HIDDEN_PORTAL_BBOX_HEIGHT 2
 #define HIDDEN_PORTAL_EXIT_START_BBOX_HEIGHT 10
 

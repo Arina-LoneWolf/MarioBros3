@@ -149,7 +149,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
-		vy = 0;
+		if (state != MARIO_STATE_GO_IN_PIPE && state != MARIO_STATE_GO_OUT_PIPE)
+			vy = 0;
 
 		if (e->ny < 0)
 		{

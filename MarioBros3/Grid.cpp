@@ -13,9 +13,9 @@ void CGrid::Resize()
 	int totalRow = MAP_HEIGHT / CELL_HEIGHT;
 	int totalCol = MAP_WIDTH / CELL_WIDTH;
 
-	cells.resize(totalRow + 1);
+	cells.resize(static_cast<long long> (totalRow) + 1);
 	for (int i = 0; i < totalRow + 1; i++)
-		cells[i].resize(totalCol + 1);
+		cells[i].resize(static_cast<long long> (totalCol) + 1);
 
 	Clear(totalRow, totalCol);
 }

@@ -333,7 +333,7 @@ public:
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
 		isOnWorldMap = 0;
-		//powerMode->Start();
+		powerMode->Start();
 		atHiddenPortal = 0;
 		isHoldingShell = false;
 		isSitting = false;

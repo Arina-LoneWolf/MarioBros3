@@ -21,7 +21,7 @@
 
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath):
+CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	player = NULL;
@@ -62,7 +62,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-		return; 
+		return;
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
@@ -75,7 +75,7 @@ void CPlayScene::_ParseSection_ASSETS(string line)
 	if (tokens.size() < 1) return;
 
 	wstring path = ToWSTR(tokens[0]);
-	
+
 	LoadAssets(path.c_str());
 }
 
@@ -93,7 +93,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[static_cast<int64_t>(i)+1].c_str());
+		int frame_time = atoi(tokens[static_cast<long long>(i) + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -101,7 +101,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 }
 
 /*
-	Parse a line in section [OBJECTS] 
+	Parse a line in section [OBJECTS]
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
@@ -114,13 +114,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float x = (float)atof(tokens[1].c_str());
 	float y = (float)atof(tokens[2].c_str());
 
-	CGameObject *obj = NULL;
+	CGameObject* obj = NULL;
 	CMagicCoinBrick* magicCoinBrick = NULL;
 
 	switch (object_type)
 	{
 	case Type::MARIO:
-		if (player != NULL) 
+		if (player != NULL)
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
@@ -185,7 +185,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case Type::HIDDEN_PORTAL:
 	{
 		int portalType = atoi(tokens[3].c_str());
-		obj = new CHiddenPortal(x, y, object_type, portalType,player);
+		obj = new CHiddenPortal(x, y, object_type, portalType, player);
 
 		break;
 	}
@@ -273,7 +273,7 @@ void CPlayScene::Load()
 	f.open(sceneFilePath);
 
 	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;					
+	int section = SCENE_SECTION_UNKNOWN;
 
 	char str[MAX_SCENE_LINE];
 	while (f.getline(str, MAX_SCENE_LINE))
@@ -284,16 +284,16 @@ void CPlayScene::Load()
 		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
 		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
 		if (line == "[TILEMAP]") { section = SCENE_SECTION_TILEMAP; continue; }
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
+		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
 		// data section
 		//
 		switch (section)
-		{ 
-			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-			case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
+		{
+		case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+		case SCENE_SECTION_TILEMAP: _ParseSection_TILEMAP(line); break;
 		}
 	}
 
@@ -332,34 +332,18 @@ void CPlayScene::Update(DWORD dt)
 	cam->Update(dt);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
+	if (player == NULL) return;
 
 	// Update camera to follow mario
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
-	CGame *game = CGame::GetInstance();
+	CGame* game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
-	//cy = CAM_START_Y;
-	//cy -= game->GetBackBufferHeight() / 2;
-	//if ((player->IsOnPowerMode() && player->GetLevel() == MARIO_LEVEL_RACCOON) || player->GetPosY() < 248 || player->GetSpeedY() > 0)
-	//{
-	//	/*if (player->GetSpeedY() < 0 && player->GetPosY() < (game->GetCamPosY() + GAME_SCREEN_HEIGHT / 2 - 32))
-	//		cy -= game->GetBackBufferHeight() / 2;
-	//	else if (player->GetSpeedY() > 0 && player->GetPosY() < game->GetCamPosY() + GAME_SCREEN_HEIGHT / 2 + 32)
-	//		cy -= game->GetBackBufferHeight() / 2;*/
-	//	cy -= game->GetBackBufferHeight() / 2;
-	//}
 
 	if (cx < 0) cx = 0;
 	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = (float)map->GetMapWidth() - GAME_SCREEN_WIDTH;
 
-	/*if (cy < 0) cy = 0;
-	if (cy > CAM_START_Y) cy = CAM_START_Y;*/
-
-
-	//CGame::GetInstance()->SetCamPos(cx, CAM_START_Y /*cy*/);
-	//CGame::GetInstance()->SetCamPos(cx, cy);
 	CGame::GetInstance()->SetCamPosX(cx);
 
 	PurgeDeletedObjects();
@@ -399,9 +383,7 @@ void CPlayScene::Clear()
 
 /*
 	Unload scene
-
-	TODO: Beside objects, we need to clean up sprites, animations and textures as well 
-
+	TODO: Beside objects, we need to clean up sprites, animations and textures as well
 */
 void CPlayScene::Unload()
 {
@@ -410,7 +392,6 @@ void CPlayScene::Unload()
 
 	/*for (int i = 0; i < magicCoinBricks.size(); i++)
 		delete magicCoinBricks[i];
-
 	magicCoinBricks.clear();*/
 	objects.clear();
 	player = NULL;

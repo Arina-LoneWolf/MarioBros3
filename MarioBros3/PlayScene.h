@@ -8,7 +8,6 @@
 #include "HUD.h"
 #include "Camera.h"
 
-
 class CPlayScene: public CScene
 {
 protected: 

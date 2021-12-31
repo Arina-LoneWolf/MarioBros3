@@ -13,6 +13,8 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
 
+	if (mario->GetState() == MARIO_STATE_GO_IN_PIPE || mario->GetState() == MARIO_STATE_GO_OUT_PIPE) return;
+
 	switch (KeyCode)
 	{
 	/*case DIK_DOWN:
@@ -50,6 +52,9 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
+	if (mario->GetState() == MARIO_STATE_GO_IN_PIPE || mario->GetState() == MARIO_STATE_GO_OUT_PIPE) return;
+
 	switch (KeyCode)
 	{
 	case DIK_S:
@@ -72,6 +77,8 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 
+	if (mario->GetState() == MARIO_STATE_GO_IN_PIPE || mario->GetState() == MARIO_STATE_GO_OUT_PIPE) return;
+
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
 		if (game->IsKeyDown(DIK_A))
@@ -88,7 +95,6 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
-		//DebugOut(L"CHAM PORTAL %d\n", mario->GetCollisionWithHiddenPortal());
 		if (mario->GetCollisionWithHiddenPortal() == HIDDEN_ZONE_ENTRANCE_START)
 			mario->SetState(MARIO_STATE_GO_IN_PIPE);
 		else
