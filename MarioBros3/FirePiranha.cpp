@@ -23,7 +23,14 @@ CFirePiranha::CFirePiranha(float x, float y, Type type, CMario* player) : CGameO
 void CFirePiranha::CreateFireball()
 {
 	Area playerArea = GetPlayerArea();
-	CFireball* fireball = new CFireball(x, y, playerArea, player); // chỉnh lại x, y
+
+	float fireballPosY;
+	if (type == Type::RED_FIRE_PIRANHA)
+		fireballPosY = y - FIREBALL_BBOX_HEIGHT;
+	else
+		fireballPosY = y - FIREBALL_BBOX_HEIGHT / 2;
+
+	CFireball* fireball = new CFireball(x, fireballPosY, playerArea, player);
 	fireballs.push_back(fireball);
 }
 
@@ -148,19 +155,31 @@ void CFirePiranha::Render()
 		{
 		case Area::TOP_LEFT_FAR:
 		case Area::TOP_LEFT_NEAR:
-			aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_UP_LEFT;
+			if (type == Type::RED_FIRE_PIRANHA)
+				aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_UP_LEFT;
+			else
+				aniId = ID_ANI_GREEN_FIRE_PIRANHA_FACE_UP_LEFT;
 			break;
 		case Area::TOP_RIGHT_FAR:
 		case Area::TOP_RIGHT_NEAR:
-			aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_UP_RIGHT;
+			if (type == Type::RED_FIRE_PIRANHA)
+				aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_UP_RIGHT;
+			else
+				aniId = ID_ANI_GREEN_FIRE_PIRANHA_FACE_UP_RIGHT;
 			break;
 		case Area::BOTTOM_LEFT_FAR:
 		case Area::BOTTOM_LEFT_NEAR:
-			aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_DOWN_LEFT;
+			if (type == Type::RED_FIRE_PIRANHA)
+				aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_DOWN_LEFT;
+			else
+				aniId = ID_ANI_GREEN_FIRE_PIRANHA_FACE_DOWN_LEFT;
 			break;
 		case Area::BOTTOM_RIGHT_FAR:
 		case Area::BOTTOM_RIGHT_NEAR:
-			aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_DOWN_RIGHT;
+			if (type == Type::RED_FIRE_PIRANHA)
+				aniId = ID_ANI_RED_FIRE_PIRANHA_FACE_DOWN_RIGHT;
+			else
+				aniId = ID_ANI_GREEN_FIRE_PIRANHA_FACE_DOWN_RIGHT;
 			break;
 		case Area::OUTSIDE_AREA:
 			aniId = last_face_ani;
@@ -168,6 +187,11 @@ void CFirePiranha::Render()
 		}
 		last_face_ani = aniId;
 	}
+
+	for (LPGAMEOBJECT fireball : fireballs)
+		fireball->Render();
+
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 }
 
 void CFirePiranha::SetState(int state)
@@ -214,7 +238,7 @@ Area CFirePiranha::GetPlayerArea()
 	
 	if (type == Type::RED_FIRE_PIRANHA)
 	{
-		float separation = y + RED_FIRE_PIRANHA_BBOX_HEIGHT / 2;
+		float separation = y - RED_FIRE_PIRANHA_BBOX_HEIGHT;
 		if (pb < separation)
 		{
 			if (pr >= RED_FIRE_PIRANHA_FAR_LEFT_START && pr < RED_FIRE_PIRANHA_NEAR_LEFT_START)

@@ -1,8 +1,9 @@
 #include "CoinEffect.h"
+#include "debug.h"
 
 void CCoinEffect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	y += vx * dt;
+	y += vy * dt;
 
 	if (y < highestPos)
 		vy = -vy;

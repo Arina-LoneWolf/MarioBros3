@@ -1,5 +1,6 @@
 #include "Collision.h"
 #include "GameObject.h"
+#include "Mario.h"
 
 #include "debug.h"
 

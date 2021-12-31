@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CoinEffect.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="debug.cpp" />
@@ -164,6 +165,8 @@
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="MagicCoinBrick.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapObject.cpp" />
+    <ClCompile Include="MapPoints.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PandoraBrick.cpp" />
@@ -171,6 +174,7 @@
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="P_Switch.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
@@ -180,12 +184,15 @@
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WorldMap.cpp" />
+    <ClCompile Include="WorldMapKeyHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CoinEffect.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="debug.h" />
@@ -204,6 +211,8 @@
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="MagicCoinBrick.h" />
+    <ClInclude Include="MapObject.h" />
+    <ClInclude Include="MapPoints.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="ObjectTypes.h" />
@@ -212,6 +221,7 @@
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="P_Switch.h" />
     <ClInclude Include="SampleKeyEventHandler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprite.h" />
@@ -223,6 +233,8 @@
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="WorldMap.h" />
+    <ClInclude Include="WorldMapKeyHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

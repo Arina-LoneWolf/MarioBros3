@@ -11,10 +11,10 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (vy > 0)
 	{
-		if (x < leftLimit)
+		if (x <= leftLimit)
 			vx = LEAF_FACTOR * pow(LEAF_POW, vy);
 
-		if (x > rightLimit)
+		if (x >= rightLimit)
 			vx = -LEAF_FACTOR * pow(LEAF_POW, vy);
 	}
 

@@ -1,13 +1,14 @@
 #include "PandoraBrick.h"
 #include "Mario.h"
 #include "Mushroom.h"
+#include "CoinEffect.h"
+#include "Leaf.h"
+#include "P_Switch.h"
 
 void CPandoraBrick::Render()
 {
-	for (int i = 0; i < items.size(); i++)
-	{
-		items[i]->Render();
-	}
+	for (int i = 0; i < backItems.size(); i++)
+		backItems[i]->Render();
 
 	CAnimations* animations = CAnimations::GetInstance();
 	
@@ -20,6 +21,9 @@ void CPandoraBrick::Render()
 		else
 			animations->Get(ID_ANI_BRONZE_BRICK)->Render(x, y);
 	}
+
+	for (int i = 0; i < frontItems.size(); i++)
+		frontItems[i]->Render();
 
 	//RenderBoundingBox();
 }
@@ -42,23 +46,59 @@ void CPandoraBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		switch (itemType)
 		{
 		case ITEM_TYPE_RANDOM:
+		{
 			if (CMario::GetInstance()->GetLevel() == MARIO_LEVEL_SMALL)
 			{
 				CMushroom* mushroom = new CMushroom(x, y, Type::SUPER_MUSHROOM);
-				items.push_back(mushroom);
+				backItems.push_back(mushroom);
+			}
+			else
+			{
+				CLeaf* leaf = new CLeaf(x, y, Type::SUPER_LEAF);
+				frontItems.push_back(leaf);
 			}
 			break;
+		}
+
+		case ITEM_TYPE_COIN:
+		{
+			CCoinEffect* coin = new CCoinEffect(x, y - PANDORA_BRICK_BBOX_HEIGHT + 1, Type::COIN_EFFECT);
+			frontItems.push_back(coin);
+			break;
+		}
+
+		case ITEM_TYPE_GREEN_MUSHROOM:
+		{
+			CMushroom* mushroom = new CMushroom(x, y, Type::UP_MUSHROOM);
+			backItems.push_back(mushroom);
+			break;
+		}
+
+		case ITEM_TYPE_P_SWITCH:
+		{
+			CP_Switch* p_switch = new CP_Switch(x, y - P_SWITCH_BBOX_HEIGHT, Type::P_SWITCH, magicCoinBricks);
+			backItems.push_back(p_switch);
+		}
+
 		default:
 			break;
 		}
 	}
 
-	for (int i = 0; i < items.size(); i++)
+	for (int i = 0; i < frontItems.size(); i++)
 	{
-		items[i]->Update(dt, coObjects);
+		frontItems[i]->Update(dt, coObjects);
 
-		if (items[i]->IsDeleted())
-			items.erase(items.begin() + i);
+		if (frontItems[i]->IsDeleted())
+			frontItems.erase(frontItems.begin() + i);
+	}
+
+	for (int i = 0; i < backItems.size(); i++)
+	{
+		backItems[i]->Update(dt, coObjects);
+
+		if (backItems[i]->IsDeleted())
+			backItems.erase(backItems.begin() + i);
 	}
 
 	CGameObject::Update(dt, coObjects);

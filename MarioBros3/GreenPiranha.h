@@ -31,7 +31,7 @@ class CGreenPiranha : public CGameObject
 
 public:
 	CGreenPiranha(float x, float y, Type type, CMario* player);
-	virtual void Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void SetState(int state);

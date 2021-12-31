@@ -20,11 +20,11 @@ class CGameObject
 {
 protected:
 
-	float x; 
-	float y;
+	/*float x; 
+	float y;*/
 
-	float vx;
-	float vy;
+	/*float vx;
+	float vy;*/
 
 	int nx;	 
 
@@ -35,6 +35,12 @@ protected:
 	Type type;
 
 public: 
+	float x;
+	float y;
+
+	float vx;
+	float vy;
+
 	void SetType(Type type) { this->type = type; }
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }

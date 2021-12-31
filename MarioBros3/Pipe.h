@@ -23,13 +23,18 @@
 class CPipe : public CGameObject
 {
 	int pipeType;
+	
 
 public:
+	int blocking;
 	CPipe(float x, float y, Type type, int pipeType) : CGameObject(x, y, type)
 	{
+		blocking = 1;
 		this->pipeType = pipeType;
 	}
 	void Render();
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
+	int IsBlocking() { return blocking; }
+	void SetBlocking(int b) { blocking = b; }
 };
 

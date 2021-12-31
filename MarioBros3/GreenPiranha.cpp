@@ -8,8 +8,10 @@ CGreenPiranha::CGreenPiranha(float x, float y, Type type, CMario* player) : CGam
 	SetState(GREEN_PIRANHA_STATE_MOVE_UP);
 }
 
-void CGreenPiranha::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CGreenPiranha::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	y += vy * dt;
+
 	if (attackTime->IsStopped() && y <= topLimit)
 	{
 		y = topLimit;

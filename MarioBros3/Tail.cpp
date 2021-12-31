@@ -4,6 +4,8 @@
 #include "Goomba.h"
 #include "MagicCoinBrick.h"
 #include "PandoraBrick.h"
+#include "FirePiranha.h"
+#include "GreenPiranha.h"
 
 void CTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -69,6 +71,10 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				OnCollisionWithKoopa(e);
 			else if (dynamic_cast<CMagicCoinBrick*>(e))
 				OnCollisionWithMagicCoinBrick(e);
+			else if (dynamic_cast<CFirePiranha*>(e))
+				OnCollisionWithMagicFirePiranha(e);
+			else if (dynamic_cast<CGreenPiranha*>(e))
+				OnCollisionWithMagicGreenPiranha(e);
 		}
 	}
 }
@@ -121,4 +127,14 @@ void CTail::OnCollisionWithMagicCoinBrick(LPGAMEOBJECT e)
 {
 	if (e->GetState() != MAGIC_BRICK_STATE_BREAK)
 		e->SetState(MAGIC_BRICK_STATE_BREAK);
+}
+
+void CTail::OnCollisionWithMagicFirePiranha(LPGAMEOBJECT e)
+{
+	e->SetState(FIRE_PIRANHA_STATE_DIE);
+}
+
+void CTail::OnCollisionWithMagicGreenPiranha(LPGAMEOBJECT e)
+{
+	e->SetState(GREEN_PIRANHA_STATE_DIE);
 }

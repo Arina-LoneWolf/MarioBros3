@@ -18,9 +18,9 @@
 #define ID_ANI_BRONZE_BRICK	612
 
 #define ITEM_TYPE_RANDOM			0
-#define ITEM_TYPE_COIN				2
-#define ITEM_TYPE_GREEN_MUSHROOM	3
-#define ITEM_TYPE_P_SWITCH			4
+#define ITEM_TYPE_COIN				1
+#define ITEM_TYPE_GREEN_MUSHROOM	2
+#define ITEM_TYPE_P_SWITCH			3
 
 class CPandoraBrick : public CGameObject {
 public:
@@ -33,15 +33,19 @@ public:
 
 	//bool isReadyToDropItem = false;
 
-	vector<LPGAMEOBJECT> items;
+	vector<LPGAMEOBJECT> backItems;
+	vector<LPGAMEOBJECT> frontItems;
 
-	CPandoraBrick(float x, float y, Type type, int brickType, int itemType) : CGameObject(x, y, type)
+	vector<LPGAMEOBJECT>* magicCoinBricks;
+
+	CPandoraBrick(float x, float y, Type type, int brickType, int itemType, vector<LPGAMEOBJECT>* listMagicCoinBricks) : CGameObject(x, y, type)
 	{
 		this->brickType = brickType;
 		this->itemType = itemType;
 		isBouncedUp = false;
 		initialY = y;
 		highestPos = initialY - PANDORA_BRICK_BOUNCE_DISTANCE;
+		magicCoinBricks = listMagicCoinBricks;
 	}
 
 	void Render();

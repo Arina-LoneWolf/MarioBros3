@@ -6,21 +6,19 @@
 #include "Mario.h"
 #include "TileMap.h"
 #include "HUD.h"
-#include "Camera.h"
 
 
-class CPlayScene: public CScene
+class CWorldMap : public CScene
 {
-protected: 
+protected:
 	// A play scene has to have player, right? 
-	CMario* player;		
+	CMario* player;
 
 	TileMap* map;
 	CHUD* HUD;
-	Camera* cam;
 
 	vector<LPGAMEOBJECT> objects;
-	vector<LPGAMEOBJECT> magicCoinBricks;
+	vector<LPGAMEOBJECT> points;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -31,9 +29,9 @@ protected:
 	void _ParseSection_TILEMAP(string line);
 
 	void LoadAssets(LPCWSTR assetFile);
-	
-public: 
-	CPlayScene(int id, LPCWSTR filePath);
+
+public:
+	CWorldMap(int id, LPCWSTR filePath);
 
 	virtual void Load();
 	virtual void Update(DWORD dt);
@@ -42,11 +40,9 @@ public:
 
 	LPGAMEOBJECT GetPlayer() { return player; }
 
-	void Clear();
+	/*void Clear();
 	void PurgeDeletedObjects();
 
-	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
+	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);*/
 };
-
-typedef CPlayScene* LPPLAYSCENE;
 

@@ -4,20 +4,18 @@
 void CHiddenPortal::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x - HIDDEN_PORTAL_BBOX_WIDTH / 2;
-	top = y - HIDDEN_PORTAL_BBOX_HEIGHT / 2;
 	right = left + HIDDEN_PORTAL_BBOX_WIDTH;
-	bottom = top + HIDDEN_PORTAL_BBOX_HEIGHT;
-}
-
-void CHiddenPortal::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
-	float ml, mt, mr, mb, pl, pt, pr, pb;
-	GetBoundingBox(ml, mt, mr, mb);
-	CMario::GetInstance()->GetBoundingBox(pl, pt, pr, pb);
-	if (CGameObject::CheckAABB(ml, mt, mr, mb, pl, pt, pr, pb))
-		CMario::GetInstance()->SetCollisionWithHiddenPortal(portalType);
+	
+	if (portalType == HIDDEN_ZONE_EXIT_START)
+	{
+		top = y - HIDDEN_PORTAL_EXIT_START_BBOX_HEIGHT / 2;
+		bottom = top + HIDDEN_PORTAL_EXIT_START_BBOX_HEIGHT;
+	}
 	else
-		CMario::GetInstance()->SetCollisionWithHiddenPortal(NONE);
+	{
+		top = y - HIDDEN_PORTAL_BBOX_HEIGHT / 2;
+		bottom = top + HIDDEN_PORTAL_BBOX_HEIGHT;
+	}
 }
 
 void CHiddenPortal::Render()

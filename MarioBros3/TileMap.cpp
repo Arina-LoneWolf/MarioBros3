@@ -73,12 +73,16 @@ void TileMap::Render()
 	int top = (int)cy / TILE_CELL_HEIGHT;
 	int bottom = top + (GAME_SCREEN_HEIGHT / TILE_CELL_HEIGHT);
 
-	for (UINT i = top; i <= bottom; i++)
+	for (UINT i = top; i <=bottom ; i++)
 	{
 		for (UINT j = left; j <= right; j++)
 		{
 			float x = TILE_CELL_WIDTH * j + TILE_CELL_WIDTH / 2;
 			float y = TILE_CELL_HEIGHT * i + TILE_CELL_HEIGHT / 2;
+			DebugOut(L"X %f\n", x);
+			DebugOut(L"Y %f\n", y);
+			DebugOut(L"i %d\n", i);
+			DebugOut(L"j %d\n", j);
 			sprites->Get(tileMap[i][j] + id)->Draw(x, y);
 		}
 	}

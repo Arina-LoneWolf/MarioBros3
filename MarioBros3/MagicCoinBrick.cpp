@@ -42,6 +42,9 @@ void CMagicCoinBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (pieces[i]->IsDeleted())
 			pieces.erase(pieces.begin() + i);
 	}
+
+	if (transformationTime->IsTimeUp())
+		SetState(MAGIC_COIN_BRICK_STATE_NORMAL);
 }
 
 void CMagicCoinBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -75,6 +78,28 @@ void CMagicCoinBrick::SetState(int state)
 
 		pieces = { topLeftPiece, topRightPiece, bottomLeftPiece, bottomRightPiece };
 		isBroken = true;
+	}
+	else if (state == MAGIC_COIN_BRICK_STATE_TRANSFORM)
+	{
+		if (initialType == Type::BRONZE_BRICK)
+		{
+			SetType(Type::COIN);
+			blocking = 0;
+		}
+		else
+		{
+			SetType(Type::BRONZE_BRICK);
+			blocking = 1;
+		}
+		transformationTime->Start();
+	}
+	else if (state == MAGIC_COIN_BRICK_STATE_NORMAL)
+	{
+		SetType(initialType);
+		if (initialType == Type::BRONZE_BRICK)
+			blocking = 1;
+		else
+			blocking = 0;
 	}
 
 	CGameObject::SetState(state);

@@ -4,9 +4,9 @@
 
 #define LEAF_HIGHEST_POS_OFFSET 32
 #define LEAF_RIGHT_LIMIT_OFFSET 32
-#define LEAF_DEFECT_SPEED_Y 1.0f
-#define LEAF_SPEED_Y 0.35f
-#define LEAF_FACTOR 0.3
+#define LEAF_DEFECT_SPEED_Y 1.4f
+#define LEAF_SPEED_Y 0.45f
+#define LEAF_FACTOR 0.25
 #define LEAF_POW 35
 
 #define LEAF_BBOX_WIDTH 16
@@ -23,7 +23,7 @@ class CLeaf : public CGameObject
 public:
 	CLeaf(float x, float y, Type type) : CGameObject(x, y, type)
 	{
-		highestPos = x - LEAF_HIGHEST_POS_OFFSET;
+		highestPos = y - LEAF_HIGHEST_POS_OFFSET;
 		leftLimit = x;
 		rightLimit = x + LEAF_RIGHT_LIMIT_OFFSET;
 		vy = -LEAF_DEFECT_SPEED_Y;

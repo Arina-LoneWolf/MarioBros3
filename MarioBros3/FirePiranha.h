@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Timer.h"
+#include "Mario.h"
 
 #define FIRE_PIRANHA_DELAY_TIME 1500
 #define FIRE_PIRANHA_DELAY_ATTACK_TIME 700

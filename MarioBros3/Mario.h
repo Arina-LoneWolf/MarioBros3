@@ -254,6 +254,11 @@
 #pragma endregion
 
 
+#define MARIO_ON_OVERWORLD_MAP_ANI_SMALL	1
+#define MARIO_ON_OVERWORLD_MAP_ANI_BIG		2
+#define MARIO_ON_OVERWORLD_MAP_ANI_RACCOON	3
+#define MARIO_ON_OVERWORLD_MAP_ANI_FIRE		4
+
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_KICK_SHELL_TIME 200
 #define MARIO_SPIN_TAIL_TIME 250
@@ -267,6 +272,7 @@ class CMario : public CGameObject
 	CTimer* spinTail = new CTimer(MARIO_SPIN_TAIL_TIME);
 	CTimer* wagTail = new CTimer(MARIO_WAG_TAIL_TIME);
 	CTimer* powerMode = new CTimer(6000);
+	//CTimer* powerMode = new CTimer(1000000);
 
 	CTail* tail = new CTail(spinTail);
 
@@ -280,20 +286,22 @@ class CMario : public CGameObject
 	float ay;				// acceleration on y 
 
 	int level; 
-	int atHiddenPortal;
+	
 
 	int untouchable; 
 	ULONGLONG untouchable_start;
 
 	int coin; 
 
-	BOOLEAN isOnPlatform;
+	/*BOOLEAN isOnPlatform;*/
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e);
+	void OnCollisionWithPipe(LPCOLLISIONEVENT e);
+	void OnCollisionWithPiranha();
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -301,8 +309,11 @@ class CMario : public CGameObject
 	int GetAniIdFire();
 
 public:
+	BOOLEAN isOnPlatform;
+	int atHiddenPortal;
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
+		//powerMode->Start();
 		atHiddenPortal = 0;
 		isHoldingShell = false;
 		isSitting = false;
@@ -320,6 +331,7 @@ public:
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
+	void RenderOnWorldMap();
 	void SetState(int state);
 
 	int IsCollidable()
@@ -336,7 +348,7 @@ public:
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	void SetCollisionWithHiddenPortal(int portalType) { this->atHiddenPortal = portalType; }
+	void SetCollisionWithHiddenPortal(int portalType) { atHiddenPortal = portalType; }
 	int GetCollisionWithHiddenPortal() { return atHiddenPortal; }
 
 	void DecelerateSlightly();
@@ -350,6 +362,9 @@ public:
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	float GetSpeedX() { return this->vx; }
+	float GetSpeedY() { return this->vy; }
+	float GetPosY() { return this->y; }
+	void SetSpeedY(float vy) { this->vy = vy; }
 
 	static CMario* GetInstance();
 };

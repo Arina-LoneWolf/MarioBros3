@@ -28,5 +28,7 @@ public:
 	void OnCollisionWithKoopa(LPGAMEOBJECT e);
 	void OnCollisionWithPandoraBrick(LPGAMEOBJECT e);
 	void OnCollisionWithMagicCoinBrick(LPGAMEOBJECT e);
+	void OnCollisionWithMagicFirePiranha(LPGAMEOBJECT e);
+	void OnCollisionWithMagicGreenPiranha(LPGAMEOBJECT e);
 };
 

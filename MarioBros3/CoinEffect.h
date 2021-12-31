@@ -17,6 +17,7 @@ public:
 	{
 		highestPos = y - COIN_EFFECT_HIGHEST_POS_OFFSET;
 		lowestPos = y - COIN_EFFECT_LOWEST_POS_OFFSET;
+		vy = -COIN_EFFECT_SPEED_Y;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

@@ -7,8 +7,10 @@
 #include "Goomba.h"
 #include "Koopa.h"
 #include "PandoraBrick.h"
+#include "P_Switch.h"
 #include "Portal.h"
 #include "HiddenPortal.h"
+#include "Pipe.h"
 
 #include "Collision.h"
 #include "Textures.h"
@@ -39,7 +41,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else if (state == MARIO_STATE_GO_OUT_PIPE)
 		vy = -MARIO_GO_PIPE_SPEED_Y;*/
 
-	if (atHiddenPortal == HIDDEN_ZONE_EXIT_END || atHiddenPortal == HIDDEN_ZONE_ENTRANCE_END)
+	if ((atHiddenPortal == HIDDEN_ZONE_EXIT_END || atHiddenPortal == HIDDEN_ZONE_ENTRANCE_END) 
+		&& (state == MARIO_STATE_GO_IN_PIPE || state == MARIO_STATE_GO_OUT_PIPE))
 		SetState(MARIO_STATE_IDLE);
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
@@ -63,13 +66,55 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (powerMode->IsTimeUp())
 		powerMode->Stop();
 
+	
+
+	/*if (state == MARIO_STATE_GO_IN_PIPE && !atHiddenPortal)
+	{
+		SetPosition(2111, 481);
+	}*/
+
 	isOnPlatform = false;
 
 	tail->Update(dt, coObjects);
 
 	dax = MARIO_DECEL_X * dt;
 
+	float ml, mt, mr, mb, bl, bt, br, bb; // main object (m) and blocking objects (b)
+	GetBoundingBox(ml, mt, mr, mb);
+
+	int portalCollided = 0;
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (!dynamic_cast<CHiddenPortal*>(coObjects->at(i))) continue;
+
+		CHiddenPortal* portal = dynamic_cast<CHiddenPortal*>(coObjects->at(i));
+		portal->GetBoundingBox(bl, bt, br, bb);
+		if (CGameObject::CheckAABB(ml, mt, mr, mb, bl, bt, br, bb))
+		{
+			portalCollided = portal->portalType;
+			break;
+		}
+	}
+	atHiddenPortal = portalCollided;
+	
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+
+
+	if (state != MARIO_STATE_GO_IN_PIPE && state != MARIO_STATE_GO_OUT_PIPE)
+	{
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			LPGAMEOBJECT e = coObjects->at(i);
+			if (e->GetType() == Type::PIPE)
+			{
+				CPipe* pipe = dynamic_cast<CPipe*>(e);
+				if (!pipe->blocking)
+					pipe->SetBlocking(1);
+			}
+		}
+	}
+
+	DebugOut(L"mario vy: %f\n", vy);
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -83,6 +128,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
+
 		if (e->ny < 0)
 		{
 			wagTail->Stop();
@@ -100,8 +146,12 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopa(e);
 	else if (e->obj->GetType() == Type::COIN)
 		OnCollisionWithCoin(e);
+	else if (e->obj->GetType() == Type::RED_FIRE_PIRANHA || e->obj->GetType() == Type::GREEN_FIRE_PIRANHA || e->obj->GetType() == Type::GREEN_PIRANHA)
+		OnCollisionWithPiranha();
 	else if (dynamic_cast<CPandoraBrick*>(e->obj))
 		OnCollisionWithPandoraBrick(e);
+	else if (e->obj->GetType() == Type::PIPE)
+		OnCollisionWithPipe(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 }
@@ -222,6 +272,22 @@ void CMario::OnCollisionWithPandoraBrick(LPCOLLISIONEVENT e)
 {
 	if (e->ny > 0 && e->obj->GetState() != PANDORA_BRICK_STATE_ACTIVE)
 		e->obj->SetState(PANDORA_BRICK_STATE_ACTIVE);
+}
+
+void CMario::OnCollisionWithPipe(LPCOLLISIONEVENT e)
+{
+	CPipe* pipe = dynamic_cast<CPipe*>(e->obj);
+	pipe->SetBlocking(1);
+	if (state == MARIO_STATE_GO_IN_PIPE || state == MARIO_STATE_GO_OUT_PIPE)
+		pipe->SetBlocking(0);
+	//else
+		
+}
+
+void CMario::OnCollisionWithPiranha()
+{
+	if (untouchable == 0)
+		HitByEnemy();
 }
 
 int CMario::GetAniIdSmall()
@@ -639,9 +705,33 @@ void CMario::Render()
 
 	//tail->Render();
 
-	/*RenderBoundingBox();*/
+	RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d", coin);
+}
+
+void CMario::RenderOnWorldMap()
+{
+	CAnimations* animations = CAnimations::GetInstance();
+	int aniId = -1;
+
+	switch (level)
+	{
+	case MARIO_LEVEL_SMALL:
+		aniId = MARIO_ON_OVERWORLD_MAP_ANI_SMALL;
+		break;
+	case MARIO_LEVEL_BIG:
+		aniId = MARIO_ON_OVERWORLD_MAP_ANI_BIG;
+		break;
+	case MARIO_LEVEL_RACCOON:
+		aniId = MARIO_ON_OVERWORLD_MAP_ANI_RACCOON;
+		break;
+	case MARIO_LEVEL_FIRE:
+		aniId = MARIO_ON_OVERWORLD_MAP_ANI_FIRE;
+		break;
+	}
+
+	RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -697,11 +787,9 @@ void CMario::SetState(int state)
 		}
 		else
 		{
-			DebugOut(L"VAO JUMP ON AIR\n");
 			if (!(powerMode->IsTimeUp() || powerMode->IsStopped()) && level == MARIO_LEVEL_RACCOON)
 			{
-				DebugOut(L"NHAY LAN NUA ON AIR\n");
-				vy = -0.2f; // defineeeee
+				vy = -0.25f; // defineeeee
 			}
 			else if (wagTail->IsStopped() && level == MARIO_LEVEL_RACCOON)
 				wagTail->Start();
@@ -729,6 +817,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_IDLE:
+		isInPipe = false;
 		DecelerateSlightly();
 		break;
 
@@ -747,11 +836,15 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_GO_IN_PIPE:
+		powerMode->Stop();
 		vy = MARIO_GO_PIPE_SPEED_Y;
+		isInPipe = true;
 		break;
 
 	case MARIO_STATE_GO_OUT_PIPE:
+		powerMode->Stop();
 		vy = -MARIO_GO_PIPE_SPEED_Y;
+		isInPipe = true;
 		break;
 	}
 

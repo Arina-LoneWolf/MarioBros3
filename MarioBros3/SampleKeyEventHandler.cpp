@@ -53,10 +53,12 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
-		mario->SetState(MARIO_STATE_RELEASE_JUMP);
+		if (mario->GetState() != MARIO_STATE_GO_IN_PIPE && mario->GetState() != MARIO_STATE_GO_OUT_PIPE)
+			mario->SetState(MARIO_STATE_RELEASE_JUMP);
 		break;
 	case DIK_DOWN:
-		mario->SetState(MARIO_STATE_SIT_RELEASE);
+		if (mario->GetState() != MARIO_STATE_GO_IN_PIPE && mario->GetState() != MARIO_STATE_GO_OUT_PIPE)
+			mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
 	}
 }
@@ -82,6 +84,7 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
+		//DebugOut(L"CHAM PORTAL %d\n", mario->GetCollisionWithHiddenPortal());
 		if (mario->GetCollisionWithHiddenPortal() == HIDDEN_ZONE_ENTRANCE_START)
 			mario->SetState(MARIO_STATE_GO_IN_PIPE);
 		else
@@ -94,7 +97,11 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	}
 	else
 	{
+		/*DebugOut(L"mario state %d\n", mario->GetState());*/
 		if (mario->GetState() != MARIO_STATE_GO_IN_PIPE && mario->GetState() != MARIO_STATE_GO_OUT_PIPE)
+		{
+			//DebugOut(L"SET IDLE\n");
 			mario->SetState(MARIO_STATE_IDLE);
+		}
 	}
 }

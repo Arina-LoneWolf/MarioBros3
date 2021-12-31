@@ -10,6 +10,9 @@
 #include "Ground.h"
 #include "PandoraBrick.h"
 #include "Pipe.h"
+#include "FirePiranha.h"
+#include "GreenPiranha.h"
+#include "HiddenPortal.h"
 #include "Koopa.h"
 #include "Goomba.h"
 #include "MagicCoinBrick.h"
@@ -22,6 +25,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 	CScene(id, filePath)
 {
 	player = NULL;
+	map = NULL;
+	HUD = NULL;
+	cam = NULL;
 	key_handler = new CSampleKeyHandler(this);
 }
 
@@ -109,11 +115,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = (float)atof(tokens[2].c_str());
 
 	CGameObject *obj = NULL;
+	CMagicCoinBrick* magicCoinBrick = NULL;
 
 	switch (object_type)
 	{
 	case Type::MARIO:
-		if (player!=NULL) 
+		if (player != NULL) 
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
@@ -121,9 +128,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = CMario::GetInstance();
 		player = (CMario*)obj;
 		player->SetPosition(x, y);
+		cam = new Camera(player);
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
+
 	case Type::YELLOW_GOOMBA:
 	case Type::RED_PARAGOOMBA:
 		obj = new CGoomba(x, y, object_type); break;
@@ -135,65 +144,62 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case Type::COIN:
 	case Type::BRONZE_BRICK:
-		obj = new CMagicCoinBrick(x, y, object_type); break;
+		magicCoinBrick = new CMagicCoinBrick(x, y, object_type); break;
 
 	case Type::PANDORA_BRICK:
 	{
-		int brickType = (float)atof(tokens[3].c_str());
-		int itemType = (float)atof(tokens[4].c_str());
+		int brickType = atoi(tokens[3].c_str());
+		int itemType = atoi(tokens[4].c_str());
 
-		obj = new CPandoraBrick(x, y, object_type, brickType, itemType);
+		obj = new CPandoraBrick(x, y, object_type, brickType, itemType, &magicCoinBricks);
 
 		break;
 	}
 
 	case Type::PIPE:
 	{
-		int pipeType = (float)atof(tokens[3].c_str());
+		int pipeType = atoi(tokens[3].c_str());
 		obj = new CPipe(x, y, object_type, pipeType);
 
 		break;
 	}
 
+	case Type::RED_FIRE_PIRANHA:
+	case Type::GREEN_FIRE_PIRANHA:
+		obj = new CFirePiranha(x, y, object_type, (CMario*)player); break;
+
+	case Type::GREEN_PIRANHA:
+		obj = new CGreenPiranha(x, y, object_type, (CMario*)player); break;
+
 	case Type::COLOR_BOX:
 	case Type::GROUND:
 	{
-		int row_cell_num = (float)atof(tokens[3].c_str());
-		int column_cell_num = (float)atof(tokens[4].c_str());
+		int row_cell_num = atoi(tokens[3].c_str());
+		int column_cell_num = atoi(tokens[4].c_str());
 
 		obj = new CGround(x, y, object_type, row_cell_num, column_cell_num);
 
 		break;
 	}
 
-	/*case Type::PLATFORM:
+	case Type::HIDDEN_PORTAL:
 	{
-
-		float cell_width = (float)atof(tokens[3].c_str());
-		float cell_height = (float)atof(tokens[4].c_str());
-		int length = atoi(tokens[5].c_str());
-		int sprite_begin = atoi(tokens[6].c_str());
-		int sprite_middle = atoi(tokens[7].c_str());
-		int sprite_end = atoi(tokens[8].c_str());
-
-		obj = new CPlatform(
-			x, y,
-			cell_width, cell_height, length,
-			sprite_begin, sprite_middle, sprite_end
-		);
+		int portalType = atoi(tokens[3].c_str());
+		obj = new CHiddenPortal(x, y, object_type, portalType,player);
 
 		break;
-	}*/
+	}
 
 	case Type::PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
-	}
-	break;
 
+		obj = new CPortal(x, y, r, b, scene_id);
+
+		break;
+	}
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
@@ -201,7 +207,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	objects.push_back(obj);
+	if (magicCoinBrick)
+		magicCoinBricks.push_back(magicCoinBrick);
+	else
+		objects.push_back(obj);
 }
 
 void CPlayScene::_ParseSection_TILEMAP(string line)
@@ -305,10 +314,22 @@ void CPlayScene::Update(DWORD dt)
 			coObjects.push_back(objects[i]);
 	}
 
+	for (size_t i = 0; i < magicCoinBricks.size(); i++)
+	{
+		coObjects.push_back(magicCoinBricks[i]);
+	}
+
+	for (size_t i = 0; i < magicCoinBricks.size(); i++)
+	{
+		magicCoinBricks[i]->Update(dt, &coObjects);
+	}
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
+
+	cam->Update(dt);
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
@@ -319,12 +340,27 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
+	//cy = CAM_START_Y;
 	//cy -= game->GetBackBufferHeight() / 2;
+	//if ((player->IsOnPowerMode() && player->GetLevel() == MARIO_LEVEL_RACCOON) || player->GetPosY() < 248 || player->GetSpeedY() > 0)
+	//{
+	//	/*if (player->GetSpeedY() < 0 && player->GetPosY() < (game->GetCamPosY() + GAME_SCREEN_HEIGHT / 2 - 32))
+	//		cy -= game->GetBackBufferHeight() / 2;
+	//	else if (player->GetSpeedY() > 0 && player->GetPosY() < game->GetCamPosY() + GAME_SCREEN_HEIGHT / 2 + 32)
+	//		cy -= game->GetBackBufferHeight() / 2;*/
+	//	cy -= game->GetBackBufferHeight() / 2;
+	//}
 
 	if (cx < 0) cx = 0;
-	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = map->GetMapWidth() - GAME_SCREEN_WIDTH;
+	if (cx > map->GetMapWidth() - GAME_SCREEN_WIDTH) cx = (float)map->GetMapWidth() - GAME_SCREEN_WIDTH;
 
-	CGame::GetInstance()->SetCamPos(cx, CAM_START_Y /*cy*/);
+	/*if (cy < 0) cy = 0;
+	if (cy > CAM_START_Y) cy = CAM_START_Y;*/
+
+
+	//CGame::GetInstance()->SetCamPos(cx, CAM_START_Y /*cy*/);
+	//CGame::GetInstance()->SetCamPos(cx, cy);
+	CGame::GetInstance()->SetCamPosX(cx);
 
 	PurgeDeletedObjects();
 }
@@ -332,6 +368,9 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	map->Render();
+
+	for (size_t i = 0; i < magicCoinBricks.size(); i++)
+		magicCoinBricks[i]->Render();
 
 	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
@@ -350,6 +389,12 @@ void CPlayScene::Clear()
 		delete (*it);
 	}
 	objects.clear();
+
+	for (it = magicCoinBricks.begin(); it != magicCoinBricks.end(); it++)
+	{
+		delete (*it);
+	}
+	magicCoinBricks.clear();
 }
 
 /*
@@ -363,6 +408,10 @@ void CPlayScene::Unload()
 	for (int i = 0; i < objects.size(); i++)
 		delete objects[i];
 
+	/*for (int i = 0; i < magicCoinBricks.size(); i++)
+		delete magicCoinBricks[i];
+
+	magicCoinBricks.clear();*/
 	objects.clear();
 	player = NULL;
 
@@ -384,9 +433,23 @@ void CPlayScene::PurgeDeletedObjects()
 		}
 	}
 
+	for (it = magicCoinBricks.begin(); it != magicCoinBricks.end(); it++)
+	{
+		LPGAMEOBJECT o = *it;
+		if (o->IsDeleted())
+		{
+			delete o;
+			*it = NULL;
+		}
+	}
+
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
 	objects.erase(
 		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
 		objects.end());
+
+	magicCoinBricks.erase(
+		std::remove_if(magicCoinBricks.begin(), magicCoinBricks.end(), CPlayScene::IsGameObjectDeleted),
+		magicCoinBricks.end());
 }
