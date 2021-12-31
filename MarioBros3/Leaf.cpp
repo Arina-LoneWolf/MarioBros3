@@ -12,10 +12,10 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (vy > 0)
 	{
 		if (x <= leftLimit)
-			vx = LEAF_FACTOR * pow(LEAF_POW, vy);
+			vx = (float)(LEAF_FACTOR * pow(LEAF_POW, vy));
 
 		if (x >= rightLimit)
-			vx = -LEAF_FACTOR * pow(LEAF_POW, vy);
+			vx = (float)(-LEAF_FACTOR * pow(LEAF_POW, vy));
 	}
 
 	float ml, mt, mr, mb, pl, pt, pr, pb;
