@@ -138,7 +138,7 @@
     <ClCompile Include="WorldMapKeyHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MapPoints.cpp">
+    <ClCompile Include="MapPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MapObject.cpp">
@@ -281,7 +281,7 @@
     <ClInclude Include="WorldMapKeyHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MapPoints.h">
+    <ClInclude Include="MapPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MapObject.h">

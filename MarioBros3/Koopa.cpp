@@ -6,8 +6,6 @@
 //#include "Mario.h"
 #include "MagicCoinBrick.h"
 
-#define GAME_SCREEN_WIDTH 320
-
 void CKoopa::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x - KOOPA_BBOX_WIDTH / 2;

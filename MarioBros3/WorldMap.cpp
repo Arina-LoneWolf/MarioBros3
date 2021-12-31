@@ -1,6 +1,6 @@
 #include "WorldMap.h"
 #include "WorldMapKeyHandler.h"
-#include "MapPoints.h"
+#include "MapPoint.h"
 #include "MapObject.h"
 
 #define SCENE_SECTION_UNKNOWN -1
@@ -51,7 +51,7 @@ void CWorldMap::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i + 1].c_str());
+		int frame_time = atoi(tokens[static_cast<int64_t>(i) + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -91,9 +91,11 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = CMario::GetInstance();
-		player = (CMario*)obj;
+		//obj = CMario::GetInstance();
+		//player = (CMario*)obj;
+		player = CMario::GetInstance();
 		player->SetPosition(x, y);
+		player->isOnWorldMap = 1;
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
@@ -125,7 +127,7 @@ void CWorldMap::_ParseSection_OBJECTS(string line)
 
 	if (point)
 		points.push_back(point);
-	else
+	else if (obj)
 		objects.push_back(obj);
 }
 
@@ -240,6 +242,8 @@ void CWorldMap::Update(DWORD dt)
 	}
 
 	if (player == NULL) return;
+
+	player->UpdateOnWorldMap(dt, &points);
 }
 
 void CWorldMap::Render()
@@ -248,6 +252,11 @@ void CWorldMap::Render()
 
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+
+	for (size_t i = 0; i < points.size(); i++)
+		points[i]->Render();
+
+	player->RenderOnWorldMap();
 
 	HUD->Render();
 }

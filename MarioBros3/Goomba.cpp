@@ -1,8 +1,6 @@
 ﻿#include "Goomba.h"
 #include "Mario.h"
 
-#define GAME_SCREEN_WIDTH 320
-
 CGoomba::CGoomba(float x, float y, Type type) : CGameObject(x, y, type)
 {
 	lowFlyingCounter = 0;

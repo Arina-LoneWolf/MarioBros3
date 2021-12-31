@@ -1,6 +1,6 @@
 # list of object assets to load in this scene
 [ASSETS]
-data\mario.txt
+#data\mario.txt
 data\HUD.txt
 data\world_map_objects.txt
 #
@@ -10,7 +10,7 @@ data\world_map_objects.txt
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	33	56
+0	40	64
 
 # OVERWORLD MAP OBJECTS
 # help bubble
@@ -90,6 +90,7 @@ data\world_map_objects.txt
 51	200	32	2	0	1	0	0	1	20
 51	200	64	2	0	1	0	1	0	21
 51	200	128	2	0	1	0	0	0	22
+
 
 [TILEMAP]
 7777	textures\overworld-map.png	data\world-map.txt	11	5	17	52

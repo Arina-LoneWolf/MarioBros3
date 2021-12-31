@@ -8,7 +8,6 @@ height	240
 [SCENES]
 #99	data\intro.txt
 9	data\scene00.txt
-2	data\scene02.txt
 5	data\scene0005.txt
 
 # id	file 

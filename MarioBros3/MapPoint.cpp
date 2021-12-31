@@ -1,4 +1,4 @@
-#include "MapPoints.h"
+#include "MapPoint.h"
 
 CMapPoint::CMapPoint(float x, float y, Type type, int sceneID, bool left, bool right, bool above, bool under, int id) : CGameObject(x, y, type)
 {
@@ -7,8 +7,8 @@ CMapPoint::CMapPoint(float x, float y, Type type, int sceneID, bool left, bool r
 	this->y = y;
 	leftEdge = x;
 	topEdge = y;
-	rightEdge = x + MAP_POINT_BBOX_WIDTH;
-	bottomEdge = y + MAP_POINT_BBOX_HEIGHT;
+	rightEdge = x + 8;
+	bottomEdge = y + 8;
 	this->sceneID = sceneID;
 	hasPointAround.insert(hasPointAround.end(), { left, right, above, under });
 }

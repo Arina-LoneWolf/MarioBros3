@@ -7,6 +7,7 @@
 #include "debug.h"
 #include "Timer.h"
 #include "Tail.h"
+#include "MapPoint.h"
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_MAX_RUNNING_SPEED	0.25f
@@ -253,16 +254,25 @@
 
 #pragma endregion
 
+#define MARIO_SPEED_ON_MAP	0.1f
 
 #define MARIO_ON_OVERWORLD_MAP_ANI_SMALL	1
 #define MARIO_ON_OVERWORLD_MAP_ANI_BIG		2
 #define MARIO_ON_OVERWORLD_MAP_ANI_RACCOON	3
 #define MARIO_ON_OVERWORLD_MAP_ANI_FIRE		4
 
+#define ALLOWED_TO_GO_LEFT	0
+#define ALLOWED_TO_GO_RIGHT	1
+#define ALLOWED_TO_GO_UP	2
+#define ALLOWED_TO_GO_DOWN	3
+
 #define MARIO_UNTOUCHABLE_TIME 2500
 #define MARIO_KICK_SHELL_TIME 200
 #define MARIO_SPIN_TAIL_TIME 250
 #define MARIO_WAG_TAIL_TIME 450
+
+#define START_POINT_X	40
+#define START_POINT_Y	64
 
 class CMario : public CGameObject
 {
@@ -309,10 +319,15 @@ class CMario : public CGameObject
 	int GetAniIdFire();
 
 public:
+	CMapPoint* currentPoint = new CMapPoint(START_POINT_X, START_POINT_Y, Type::MAP_POINT, 4, 0, 1, 0, 0, 1);
+	vector<bool> movementPermission{ 0, 1, 0, 0 };
 	BOOLEAN isOnPlatform;
+	int isOnWorldMap;
 	int atHiddenPortal;
+
 	CMario(float x, float y, Type type) : CGameObject(x, y, type)
 	{
+		isOnWorldMap = 0;
 		//powerMode->Start();
 		atHiddenPortal = 0;
 		isHoldingShell = false;
@@ -330,6 +345,7 @@ public:
 		coin = 0;
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	void UpdateOnWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coPoints);
 	void Render();
 	void RenderOnWorldMap();
 	void SetState(int state);

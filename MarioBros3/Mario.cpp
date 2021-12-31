@@ -113,8 +113,42 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
+}
 
-	DebugOut(L"mario vy: %f\n", vy);
+void CMario::UpdateOnWorldMap(DWORD dt, vector<LPGAMEOBJECT>* coPoints)
+{
+	CGameObject::Update(dt);
+	x += vx * dt;
+	y += vy * dt;
+
+	float ml, mt, mr, mb, pl, pt, pr, pb; // main object (o) and the point (p)
+	GetBoundingBox(ml, mt, mr, mb);
+	for (UINT i = 0; i < coPoints->size(); i++)
+	{
+		LPGAMEOBJECT e = coPoints->at(i);
+		e->GetBoundingBox(pl, pt, pr, pb);
+		if (CGameObject::CheckAABB(ml, mt, mr, mb, pl, pt, pr, pb))
+		{
+			CMapPoint* point = dynamic_cast<CMapPoint*>(coPoints->at(i));
+			if (point->id != currentPoint->id)
+			{
+				float playerLeft, playerTop, playerRight, playerBottom;
+				GetBoundingBox(playerLeft, playerTop, playerRight, playerBottom);
+
+				if ((vx > 0 && playerRight >= point->rightEdge)
+					|| (vx < 0 && playerLeft <= point->leftEdge)
+					|| (vy > 0 && playerBottom >= point->bottomEdge)
+					|| (vy < 0 && playerTop <= point->topEdge))
+				{
+					vx = 0;
+					vy = 0;
+					SetPosition(point->x, point->y);
+					movementPermission.assign(point->hasPointAround.begin(), point->hasPointAround.end());
+					*currentPoint = *point;
+				}
+			}
+		}
+	}
 }
 
 void CMario::OnNoCollision(DWORD dt)
@@ -731,6 +765,8 @@ void CMario::RenderOnWorldMap()
 		break;
 	}
 
+	animations->Get(aniId)->Render(x, y);
+
 	RenderBoundingBox();
 }
 
@@ -872,6 +908,16 @@ void CMario::HitByEnemy()
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
+	if (isOnWorldMap)
+	{
+		left = x - 8;
+		top = y - 8;
+		right = left + 16;
+		bottom = top + 16;
+
+		return;
+	}
+
 	if (level == MARIO_LEVEL_BIG || level == MARIO_LEVEL_FIRE)
 	{
 		if (nx > 0)

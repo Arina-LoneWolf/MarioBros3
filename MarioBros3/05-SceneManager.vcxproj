@@ -166,7 +166,7 @@
     <ClCompile Include="MagicCoinBrick.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapObject.cpp" />
-    <ClCompile Include="MapPoints.cpp" />
+    <ClCompile Include="MapPoint.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PandoraBrick.cpp" />
@@ -212,7 +212,7 @@
     <ClInclude Include="Leaf.h" />
     <ClInclude Include="MagicCoinBrick.h" />
     <ClInclude Include="MapObject.h" />
-    <ClInclude Include="MapPoints.h" />
+    <ClInclude Include="MapPoint.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="ObjectTypes.h" />
