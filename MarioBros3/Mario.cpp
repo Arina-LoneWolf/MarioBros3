@@ -26,20 +26,15 @@ CMario* CMario::GetInstance()
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	if (!powerMode->IsTimeUp() && !powerMode->IsStopped() && !isOnPlatform)
-		ay = 0.0003f; // defineeee
+		ay = MARIO_POWER_GRAVITY;
 	else if (!wagTail->IsStopped() && !wagTail->IsTimeUp())
-		ay = 0.000035f; // defineeee
+		ay = MARIO_WAG_TAIL_GRAVITY;
 	else
 		ay = MARIO_GRAVITY;
 
 	if (state != MARIO_STATE_GO_IN_PIPE && state != MARIO_STATE_GO_OUT_PIPE)
 		vy += ay * dt;
 	vx += ax * dt;
-
-	/*if (state == MARIO_STATE_GO_IN_PIPE)
-		vy = MARIO_GO_PIPE_SPEED_Y;
-	else if (state == MARIO_STATE_GO_OUT_PIPE)
-		vy = -MARIO_GO_PIPE_SPEED_Y;*/
 
 	if ((atHiddenPortal == HIDDEN_ZONE_EXIT_END || atHiddenPortal == HIDDEN_ZONE_ENTRANCE_END) 
 		&& (state == MARIO_STATE_GO_IN_PIPE || state == MARIO_STATE_GO_OUT_PIPE))
@@ -65,13 +60,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (powerMode->IsTimeUp())
 		powerMode->Stop();
-
-	
-
-	/*if (state == MARIO_STATE_GO_IN_PIPE && !atHiddenPortal)
-	{
-		SetPosition(2111, 481);
-	}*/
 
 	isOnPlatform = false;
 
@@ -382,7 +370,12 @@ int CMario::GetAniIdSmall()
 			else if (vx > 0)
 			{
 				if (isHoldingShell)
-					aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_SHELL_RIGHT;
+				{
+					if (ax < 0)
+						aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_SHELL_LEFT;
+					else
+						aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_SHELL_RIGHT;
+				}
 				else if (ax < 0)
 					aniId = ID_ANI_MARIO_SMALL_STOP_LEFT;
 				else if (vx == MARIO_MAX_RUNNING_SPEED)
@@ -393,7 +386,12 @@ int CMario::GetAniIdSmall()
 			else // vx < 0
 			{
 				if (isHoldingShell)
-					aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_SHELL_LEFT;
+				{
+					if (ax > 0)
+						aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_SHELL_RIGHT;
+					else
+						aniId = ID_ANI_MARIO_SMALL_WALK_HOLD_SHELL_LEFT;
+				}
 				else if (ax > 0)
 					aniId = ID_ANI_MARIO_SMALL_STOP_RIGHT;
 				else if (vx == MARIO_MAX_RUNNING_SPEED)
@@ -444,6 +442,11 @@ int CMario::GetAniIdRaccoon()
 					aniId = ID_ANI_MARIO_RACCOON_FLY_WAG_TAIL_RIGHT;
 				else
 					aniId = ID_ANI_MARIO_RACCOON_FLY_WAG_TAIL_LEFT;
+			}
+			else if (!(spinTail->IsTimeUp() || spinTail->IsStopped()))
+			{
+				if (nx > 0) aniId = ID_ANI_MARIO_RACCOON_SPIN_TAIL_RIGHT;
+				else aniId = ID_ANI_MARIO_RACCOON_SPIN_TAIL_LEFT;
 			}
 			else if (!(wagTail->IsTimeUp() || wagTail->IsStopped()))
 			{
@@ -503,7 +506,12 @@ int CMario::GetAniIdRaccoon()
 			else if (vx > 0)
 			{
 				if (isHoldingShell)
-					aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_SHELL_RIGHT;
+				{
+					if (ax < 0)
+						aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_SHELL_LEFT;
+					else
+						aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_SHELL_RIGHT;
+				}
 				else if (ax < 0)
 					aniId = ID_ANI_MARIO_RACCOON_STOP_LEFT;
 				else if (vx == MARIO_MAX_RUNNING_SPEED)
@@ -514,7 +522,12 @@ int CMario::GetAniIdRaccoon()
 			else // vx < 0
 			{
 				if (isHoldingShell)
-					aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_SHELL_LEFT;
+				{
+					if (ax > 0)
+						aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_SHELL_RIGHT;
+					else
+						aniId = ID_ANI_MARIO_RACCOON_WALK_HOLD_SHELL_LEFT;
+				}
 				else if (ax > 0)
 					aniId = ID_ANI_MARIO_RACCOON_STOP_RIGHT;
 				else if (vx == -MARIO_MAX_RUNNING_SPEED)
@@ -694,7 +707,12 @@ int CMario::GetAniIdBig()
 			else if (vx > 0)
 			{
 				if (isHoldingShell)
-					aniId = ID_ANI_MARIO_WALK_HOLD_SHELL_RIGHT;
+				{
+					if (ax < 0)
+						aniId = ID_ANI_MARIO_WALK_HOLD_SHELL_LEFT;
+					else
+						aniId = ID_ANI_MARIO_WALK_HOLD_SHELL_RIGHT;
+				}
 				else if (ax < 0)
 					aniId = ID_ANI_MARIO_STOP_LEFT;
 				else if (vx == MARIO_MAX_RUNNING_SPEED)
@@ -705,7 +723,12 @@ int CMario::GetAniIdBig()
 			else // vx < 0
 			{
 				if (isHoldingShell)
-					aniId = ID_ANI_MARIO_WALK_HOLD_SHELL_LEFT;
+				{
+					if (ax > 0)
+						aniId = ID_ANI_MARIO_WALK_HOLD_SHELL_RIGHT;
+					else
+						aniId = ID_ANI_MARIO_WALK_HOLD_SHELL_LEFT;
+				}
 				else if (ax > 0)
 					aniId = ID_ANI_MARIO_STOP_RIGHT;
 				else if (vx == -MARIO_MAX_RUNNING_SPEED)
@@ -737,9 +760,9 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	//tail->Render();
+	tail->Render();
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d", coin);
 }
@@ -767,7 +790,7 @@ void CMario::RenderOnWorldMap()
 
 	animations->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -825,7 +848,7 @@ void CMario::SetState(int state)
 		{
 			if (!(powerMode->IsTimeUp() || powerMode->IsStopped()) && level == MARIO_LEVEL_RACCOON)
 			{
-				vy = -0.25f; // defineeeee
+				vy = -MARIO_FLYING_SPEED_Y;
 			}
 			else if (wagTail->IsStopped() && level == MARIO_LEVEL_RACCOON)
 				wagTail->Start();
@@ -837,7 +860,7 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_SIT:
-		if (isOnPlatform && level != MARIO_LEVEL_SMALL && state != MARIO_STATE_WALKING_RIGHT/* && atHiddenPortal != HIDDEN_ZONE_ENTRANCE_START*/)
+		if (isOnPlatform && level != MARIO_LEVEL_SMALL && state != MARIO_STATE_WALKING_RIGHT)
 		{
 			isSitting = true;
 			DecelerateSlightly();
@@ -910,10 +933,10 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 {
 	if (isOnWorldMap)
 	{
-		left = x - 8;
-		top = y - 8;
-		right = left + 16;
-		bottom = top + 16;
+		left = x - MARIO_WORLD_MAP_BBOX / 2;
+		top = y - MARIO_WORLD_MAP_BBOX / 2;
+		right = left + MARIO_WORLD_MAP_BBOX;
+		bottom = top + MARIO_WORLD_MAP_BBOX;
 
 		return;
 	}

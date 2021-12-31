@@ -26,7 +26,7 @@ protected:
 	/*float vx;
 	float vy;*/
 
-	int nx;	 
+	/*int nx;	 */
 
 	int state;
 
@@ -35,6 +35,9 @@ protected:
 	Type type;
 
 public: 
+	bool onCam = false;
+	int nx;
+
 	float x;
 	float y;
 

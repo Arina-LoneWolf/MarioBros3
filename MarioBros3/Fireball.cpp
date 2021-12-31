@@ -60,7 +60,7 @@ void CFireball::Render()
 
 void CFireball::CreateEffect()
 {
-	CHitEffect* effect = new CHitEffect(x, y); // chỉnh lại x, y
+	CHitEffect* effect = new CHitEffect(x, y);
 	effects.push_back(effect);
 }
 

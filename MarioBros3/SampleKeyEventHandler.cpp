@@ -60,6 +60,10 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		if (mario->GetState() != MARIO_STATE_GO_IN_PIPE && mario->GetState() != MARIO_STATE_GO_OUT_PIPE)
 			mario->SetState(MARIO_STATE_SIT_RELEASE);
 		break;
+	case DIK_A:
+		if (mario->isHoldingShell)
+			mario->isHoldingShell = false;
+		break;
 	}
 }
 

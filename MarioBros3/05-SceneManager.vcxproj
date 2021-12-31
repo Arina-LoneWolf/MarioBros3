@@ -157,6 +157,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenPiranha.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="HiddenPortal.cpp" />
     <ClCompile Include="HitEffect.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GreenPiranha.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="HiddenPortal.h" />
     <ClInclude Include="HitEffect.h" />

@@ -1,5 +1,15 @@
 #include "Camera.h"
 
+#define MARIO_GO_OUT_PIPE_POS_X	2331
+#define MARIO_GO_OUT_PIPE_POS_Y	399
+
+#define MARIO_GO_IN_PIPE_POS_X	2105
+#define MARIO_GO_IN_PIPE_POS_Y	481
+
+#define STANDARD_ALTITUDE	260
+
+#define HIDDEN_ZONE_CAM_Y	464
+
 void Camera::Update(DWORD dt)
 {
 	float pl, pt, pr, pb;
@@ -10,17 +20,16 @@ void Camera::Update(DWORD dt)
 	if (player->GetState() == MARIO_STATE_GO_OUT_PIPE && !player->atHiddenPortal && isInHiddenZone)
 	{
 		camY = CAMERA_INITIAL_Y;
-		player->SetPosition(2335, 399);
+		player->SetPosition(MARIO_GO_OUT_PIPE_POS_X, MARIO_GO_OUT_PIPE_POS_Y);
 		isInHiddenZone = false;
-		//return;
 	}
 
 	if (isInHiddenZone) return;
 
 	if (player->GetState() == MARIO_STATE_GO_IN_PIPE && !player->atHiddenPortal)
 	{
-		player->SetPosition(2105, 481);
-		game->SetCamPosY(464);
+		player->SetPosition(MARIO_GO_IN_PIPE_POS_X, MARIO_GO_IN_PIPE_POS_Y);
+		game->SetCamPosY(HIDDEN_ZONE_CAM_Y);
 		isInHiddenZone = true;
 	}
 
@@ -48,7 +57,7 @@ void Camera::Update(DWORD dt)
 	}
 	else
 	{
-		if (player->vy < 0 && pt < camY + GAME_SCREEN_HEIGHT / 3 && camY <= CAMERA_INITIAL_Y)
+		if (player->vy < 0 && pt < camY + GAME_SCREEN_HEIGHT / 3 && camY <= CAMERA_INITIAL_Y && player->y < STANDARD_ALTITUDE)
 		{
 			camSpeedY = player->vy;
 		}

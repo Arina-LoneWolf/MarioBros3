@@ -51,6 +51,19 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == -1 && CGame::GetInstance()->GetCamPosX() + GAME_SCREEN_WIDTH > x)
 		SetState(KOOPA_STATE_WALKING);
 
+	if (isBeingHeld && !player->isHoldingShell)
+	{
+		if (player->nx > 0)
+		{
+			x += 6;
+		}
+		else
+			x -= 6;
+		player->kickShell->Start();
+		SetNx(player->nx);
+		SetState(KOOPA_STATE_SHELL_MOVING);
+	}
+
 	if (type == Type::RED_KOOPA)
 		for (int i = 0; i < subItems.size(); i++)
 			subItems[i]->Update(dt, coObjects);
@@ -70,7 +83,7 @@ void CKoopa::Render()
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 
 	if (type == Type::RED_KOOPA)
 		for (int i = 0; i < subItems.size(); i++)
@@ -173,6 +186,7 @@ void CKoopa::SetState(int state)
 		break;
 
 	case KOOPA_STATE_SHELL_MOVING:
+		isBeingHeld = false;
 		shellTime->Stop();
 		vibrationTime->Stop();
 		vx = KOOPA_SHELL_MOVING_SPEED * nx;

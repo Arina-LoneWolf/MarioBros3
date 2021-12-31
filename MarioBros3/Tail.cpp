@@ -6,6 +6,7 @@
 #include "PandoraBrick.h"
 #include "FirePiranha.h"
 #include "GreenPiranha.h"
+#include "TailHitEffect.h"
 
 void CTail::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
@@ -54,6 +55,14 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		attackIsOn = false;
 	}
 
+	for (int i = 0; i < effects.size(); i++)
+	{
+		effects[i]->Update(dt, coObjects);
+
+		if (effects[i]->IsDeleted())
+			effects.erase(effects.begin() + i);
+	}
+
 	float ml, mt, mr, mb, sl, st, sr, sb; // main object (m) and scene objects (b)
 	GetBoundingBox(ml, mt, mr, mb);
 
@@ -81,7 +90,16 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CTail::Render()
 {
-	RenderBoundingBox();
+	for (LPGAMEOBJECT effect : effects)
+		effect->Render();
+
+	//RenderBoundingBox();
+}
+
+void CTail::CreateEffect()
+{
+	CTailHitEffect* effect = new CTailHitEffect(x, y);
+	effects.push_back(effect);
 }
 
 void CTail::Attack()
@@ -103,7 +121,7 @@ void CTail::OnCollisionWithGoomba(LPGAMEOBJECT e)
 		e->SetNx(-1);
 	else
 		e->SetNx(1);
-
+	CreateEffect();
 	e->SetState(GOOMBA_STATE_DIE_BY_ATTACK);
 }
 
@@ -113,7 +131,7 @@ void CTail::OnCollisionWithKoopa(LPGAMEOBJECT e)
 		e->SetNx(-1);
 	else
 		e->SetNx(1);
-
+	CreateEffect();
 	e->SetState(KOOPA_STATE_SHELL_BY_ATTACK);
 }
 
@@ -131,10 +149,12 @@ void CTail::OnCollisionWithMagicCoinBrick(LPGAMEOBJECT e)
 
 void CTail::OnCollisionWithMagicFirePiranha(LPGAMEOBJECT e)
 {
+	CreateEffect();
 	e->SetState(FIRE_PIRANHA_STATE_DIE);
 }
 
 void CTail::OnCollisionWithMagicGreenPiranha(LPGAMEOBJECT e)
 {
+	CreateEffect();
 	e->SetState(GREEN_PIRANHA_STATE_DIE);
 }

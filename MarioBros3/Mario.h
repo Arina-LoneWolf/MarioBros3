@@ -20,14 +20,17 @@
 #define MARIO_JUMP_SPEED_Y		0.34f
 #define MARIO_JUMP_RUN_SPEED_Y	0.39f
 #define MARIO_GO_PIPE_SPEED_Y	0.03f
+#define MARIO_FLYING_SPEED_Y	0.25f
 
 #define MARIO_GRAVITY			0.0008f
 #define MARIO_WAG_TAIL_GRAVITY	0.000035f
+#define MARIO_POWER_GRAVITY		0.0003f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.2f
 
 #define GROUND_Y 160.0f
 
+#define MARIO_WORLD_MAP_BBOX	16
 
 #pragma region MARIO_STATE
 
@@ -49,6 +52,8 @@
 
 #define MARIO_STATE_GO_IN_PIPE		800
 #define MARIO_STATE_GO_OUT_PIPE		801
+
+#define MARIO_STATE_RELEASE_SHELL	810
 
 #pragma endregion
 
@@ -278,7 +283,6 @@ class CMario : public CGameObject
 {
 	static CMario* __instance;
 
-	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
 	CTimer* spinTail = new CTimer(MARIO_SPIN_TAIL_TIME);
 	CTimer* wagTail = new CTimer(MARIO_WAG_TAIL_TIME);
 	CTimer* powerMode = new CTimer(6000);
@@ -287,8 +291,6 @@ class CMario : public CGameObject
 	CTail* tail = new CTail(spinTail);
 
 	BOOLEAN isSitting;
-	BOOLEAN isHoldingShell;
-	BOOLEAN isInPipe;
 
 	float maxVx;
 	float dax;
@@ -319,6 +321,9 @@ class CMario : public CGameObject
 	int GetAniIdFire();
 
 public:
+	CTimer* kickShell = new CTimer(MARIO_KICK_SHELL_TIME);
+	BOOLEAN isHoldingShell;
+	BOOLEAN isInPipe;
 	CMapPoint* currentPoint = new CMapPoint(START_POINT_X, START_POINT_Y, Type::MAP_POINT, 4, 0, 1, 0, 0, 1);
 	vector<bool> movementPermission{ 0, 1, 0, 0 };
 	BOOLEAN isOnPlatform;

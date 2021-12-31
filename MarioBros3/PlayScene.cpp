@@ -372,7 +372,7 @@ void CPlayScene::Render()
 	for (size_t i = 0; i < magicCoinBricks.size(); i++)
 		magicCoinBricks[i]->Render();
 
-	for (size_t i = objects.size() - 1; i >= 0; i--)
+	for (int i = objects.size() - 1; i >= 0; i--)
 		objects[i]->Render();
 
 	HUD->Render();

@@ -253,8 +253,8 @@ void CWorldMap::Render()
 	for (size_t i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
-	for (size_t i = 0; i < points.size(); i++)
-		points[i]->Render();
+	/*for (size_t i = 0; i < points.size(); i++)
+		points[i]->Render();*/
 
 	player->RenderOnWorldMap();
 
